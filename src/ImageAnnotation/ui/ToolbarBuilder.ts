@@ -67,25 +67,25 @@ export class ToolbarBuilder {
         // Drawing tools
         const drawButton = new ButtonComponent(drawingToolsColumn)
             // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setTooltip('Draw (B)')
+            .setTooltip('画笔 (B)')
             .setIcon('pencil')
             .onClick(() => this.callbacks.onDrawingToggle());
 
         const arrowButton = new ButtonComponent(drawingToolsColumn)
             // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setTooltip('Arrow (A)')
+            .setTooltip('箭头 (A)')
             .setIcon('arrow-right')
             .onClick(() => this.callbacks.onArrowToggle());
 
         const textButton = new ButtonComponent(drawingToolsColumn)
             // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setTooltip('Add Text (T)')
+            .setTooltip('添加文本 (T)')
             .setIcon('type')
             .onClick(() => this.callbacks.onTextToggle());
 
         new ButtonComponent(drawingToolsColumn)
             // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setTooltip('Reset Zoom (1:1)')
+            .setTooltip('重置缩放 (1:1)')
             .setIcon('search')
             .onClick(() => this.callbacks.onResetZoom());
 
@@ -110,30 +110,30 @@ export class ToolbarBuilder {
 
         // Layer controls
         const layerControls = brushControlsColumn.createDiv('layer-controls');
-        layerControls.createDiv('control-label').setText('Layer:');
+        layerControls.createDiv('control-label').setText('图层:');
         const layerButtonContainer = layerControls.createDiv('image-converter-annotation-tool-button-group');
 
         new ButtonComponent(layerButtonContainer)
             // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setTooltip('Bring to Front')
+            .setTooltip('移到最前')
             .setIcon('arrow-up-to-line')
             .onClick(() => this.callbacks.onBringToFront());
 
         new ButtonComponent(layerButtonContainer)
             // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setTooltip('Bring Forward')
+            .setTooltip('上移一层')
             .setIcon('arrow-up')
             .onClick(() => this.callbacks.onBringForward());
 
         new ButtonComponent(layerButtonContainer)
             // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setTooltip('Send Backward')
+            .setTooltip('下移一层')
             .setIcon('arrow-down')
             .onClick(() => this.callbacks.onSendBackward());
 
         new ButtonComponent(layerButtonContainer)
             // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setTooltip('Send to Back')
+            .setTooltip('移到最后')
             .setIcon('arrow-down-to-line')
             .onClick(() => this.callbacks.onSendToBack());
 
@@ -143,14 +143,14 @@ export class ToolbarBuilder {
 
         // Utility buttons
         new ButtonComponent(utilityGroup)
-            .setTooltip('Clear all')
+            .setTooltip('清除全部')
             .setIcon('trash')
             .onClick(() => this.callbacks.onClearAll());
 
         this.createBackgroundButton(utilityGroup);
 
         const saveBtn = new ButtonComponent(utilityGroup)
-            .setTooltip('Save (Ctrl/Cmd + S)')
+            .setTooltip('保存 (Ctrl/Cmd + S)')
             .setIcon('checkmark')
             .onClick(() => this.callbacks.onSave());
         saveBtn.buttonEl.addClass('mod-cta');
@@ -187,7 +187,7 @@ export class ToolbarBuilder {
 
         // Grayscale row
         const grayScaleRow = swatchesContainer.createDiv('image-converter-annotation-tool-color-row');
-        grayScaleRow.createSpan('image-converter-annotation-tool-row-label').setText('Grayscale:');
+        grayScaleRow.createSpan('image-converter-annotation-tool-row-label').setText('灰度:');
         const grayScaleSwatches = grayScaleRow.createDiv('image-converter-annotation-tool-swatches-container');
         grayScaleColors.forEach(color => {
             const swatch = grayScaleSwatches.createDiv('color-swatch preset');
@@ -198,7 +198,7 @@ export class ToolbarBuilder {
 
         // Palette row
         const paletteRow = swatchesContainer.createDiv('image-converter-annotation-tool-color-row');
-        paletteRow.createSpan('image-converter-annotation-tool-row-label').setText('Palette:');
+        paletteRow.createSpan('image-converter-annotation-tool-row-label').setText('调色板:');
         const paletteSwatches = paletteRow.createDiv('image-converter-annotation-tool-swatches-container');
         paletteColors.forEach(color => {
             const swatch = paletteSwatches.createDiv('color-swatch preset');
@@ -215,7 +215,7 @@ export class ToolbarBuilder {
         })).sort((left, right) => left.luminosity - right.luminosity);
 
         const dominantRow = swatchesContainer.createDiv('image-converter-annotation-tool-color-row');
-        dominantRow.createSpan('image-converter-annotation-tool-row-label').setText('Dominant:');
+        dominantRow.createSpan('image-converter-annotation-tool-row-label').setText('主色:');
         const dominantSwatches = dominantRow.createDiv('image-converter-annotation-tool-swatches-container');
         colorPairs.forEach(pair => {
             const dominantSwatch = dominantSwatches.createDiv('color-swatch dominant');
@@ -226,7 +226,7 @@ export class ToolbarBuilder {
 
         // Complementary colors
         const complementaryRow = swatchesContainer.createDiv('image-converter-annotation-tool-color-row');
-        complementaryRow.createSpan('image-converter-annotation-tool-row-label').setText('180:');
+        complementaryRow.createSpan('image-converter-annotation-tool-row-label').setText('互补色:');
         const complementarySwatches = complementaryRow.createDiv('image-converter-annotation-tool-swatches-container');
         colorPairs.forEach(pair => {
             const complementarySwatch = complementarySwatches.createDiv('color-swatch complementary');
@@ -247,7 +247,7 @@ export class ToolbarBuilder {
 
         const sizeButtonsContainer = brushControlsColumn.createDiv('size-buttons-container');
         const sizeLabel = sizeButtonsContainer.createDiv('control-label');
-        sizeLabel.setText('Size:');
+        sizeLabel.setText('大小:');
 
         const sizeButtonContainer = sizeButtonsContainer.createDiv('image-converter-annotation-tool-button-group');
 
@@ -275,7 +275,7 @@ export class ToolbarBuilder {
 
         const opacityButtonsContainer = (brushControlsColumn as HTMLElement).createDiv('opacity-buttons-container');
         const opacityLabel = opacityButtonsContainer.createDiv('control-label');
-        opacityLabel.setText('Opacity:');
+        opacityLabel.setText('不透明度:');
 
         const opacityButtonContainer = opacityButtonsContainer.createDiv('image-converter-annotation-tool-button-group');
 
@@ -298,24 +298,24 @@ export class ToolbarBuilder {
     private createBlendModeButtons(container: HTMLElement): void {
         const blendModesContainer = container.createDiv('blend-modes-container');
         const blendModeLabel = blendModesContainer.createDiv('control-label');
-        blendModeLabel.setText('Blend:');
+        blendModeLabel.setText('混合:');
 
         const dropdownContainer = blendModesContainer.createDiv('dropdown-container');
 
         const getFriendlyName = (mode: BlendMode): string => {
             switch (mode) {
-                case 'source-over': return 'Normal';
-                case 'multiply': return 'Multiply';
-                case 'screen': return 'Screen';
-                case 'overlay': return 'Overlay';
-                case 'darken': return 'Darken';
-                case 'lighten': return 'Lighten';
-                case 'color-dodge': return 'Dodge';
-                case 'color-burn': return 'Burn';
-                case 'hard-light': return 'Hard Light';
-                case 'soft-light': return 'Soft Light';
-                case 'difference': return 'Difference';
-                case 'exclusion': return 'Exclusion';
+                case 'source-over': return '正常';
+                case 'multiply': return '正片叠底';
+                case 'screen': return '滤色';
+                case 'overlay': return '叠加';
+                case 'darken': return '变暗';
+                case 'lighten': return '变亮';
+                case 'color-dodge': return '颜色减淡';
+                case 'color-burn': return '颜色加深';
+                case 'hard-light': return '强光';
+                case 'soft-light': return '柔光';
+                case 'difference': return '差值';
+                case 'exclusion': return '排除';
                 default: return mode;
             }
         };
@@ -335,7 +335,7 @@ export class ToolbarBuilder {
 
     private createBackgroundButton(container: HTMLElement): void {
         const bgButton = new ButtonComponent(container)
-            .setTooltip('Background')
+            .setTooltip('背景')
             .setIcon('layout-template')
             .onClick((e: MouseEvent) => {
                 e.stopPropagation();
@@ -346,7 +346,7 @@ export class ToolbarBuilder {
     private createTextBackgroundControls(container: HTMLElement): void {
         const textBgContainer = container.createDiv('image-converter-annotation-tool-control-group');
         // eslint-disable-next-line obsidianmd/ui/sentence-case
-        textBgContainer.createDiv('control-label').setText('Text Background:');
+        textBgContainer.createDiv('control-label').setText('文本背景:');
         const controlsContainer = textBgContainer.createDiv('image-converter-annotation-tool-button-group');
 
         const bgColorWrapper = controlsContainer.createDiv('image-converter-annotation-tool-background-color-wrapper');
@@ -367,14 +367,14 @@ export class ToolbarBuilder {
         });
 
         new ButtonComponent(controlsContainer)
-            .setTooltip('Transparent')
+            .setTooltip('透明')
             .setIcon('eraser')
             .onClick(() => {
                 this.callbacks.onTextBackgroundChange('transparent');
             });
 
         new ButtonComponent(controlsContainer)
-            .setTooltip('Semi-transparent white')
+            .setTooltip('半透明白色')
             .setIcon('square')
             .onClick(() => {
                 this.callbacks.onTextBackgroundChange('rgba(255, 255, 255, 0.7)');
@@ -382,7 +382,7 @@ export class ToolbarBuilder {
             .buttonEl.addClass('bg-white-semi');
 
         new ButtonComponent(controlsContainer)
-            .setTooltip('Semi-transparent black')
+            .setTooltip('半透明黑色')
             .setIcon('square')
             .onClick(() => {
                 this.callbacks.onTextBackgroundChange('rgba(0, 0, 0, 0.7)');
@@ -417,7 +417,7 @@ export class ToolbarBuilder {
                 }
             });
 
-            presetButton.setAttribute('title', 'Click to load, Shift+Click to save');
+            presetButton.setAttribute('title', '点击加载，Shift+点击保存');
         }
     }
 

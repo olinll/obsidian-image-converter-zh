@@ -1,3 +1,5 @@
+> **🇨🇳 中文用户：** 本仓库已完成中文本地化，插件界面为中文。请查看 [中文说明文档](README_ZH.md)。
+
 # Image Converter for ObsidianMD
 
 Making image management inside Obsidian slightly more convenient.

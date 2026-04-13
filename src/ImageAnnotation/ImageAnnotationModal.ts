@@ -213,7 +213,7 @@ export class ImageAnnotationModal extends Modal {
             img.src = blobUrl;
         } catch (error) {
             console.error('Error loading image:', error);
-            new Notice('Error loading image');
+            new Notice('加载图片时出错');
         }
     }
 
@@ -772,7 +772,7 @@ export class ImageAnnotationModal extends Modal {
                 backgroundColor = hexToRgba(bgColorPicker.value, alpha);
             }
 
-            const text = new IText('Type here', {
+            const text = new IText('在此输入', {
                 left: x,
                 top: y,
                 fontSize: 20,
@@ -849,7 +849,7 @@ export class ImageAnnotationModal extends Modal {
 
         await this.plugin.saveSettings();
         this.updatePresetButtons();
-        new Notice(`Preset ${index + 1} saved`);
+        new Notice(`预设 ${index + 1} 已保存`);
     }
 
     private loadPreset(index: number): void {
@@ -1018,7 +1018,7 @@ export class ImageAnnotationModal extends Modal {
     private clearAll(): void {
         if (!this.canvas) return;
 
-        new ConfirmDialog(this.app, 'Clear Annotations', 'Are you sure you want to clear all annotations?', 'Clear', () => {
+        new ConfirmDialog(this.app, '清除标注', '确定要清除所有标注吗？', '清除', () => {
             const objects = this.canvas.getObjects();
             objects.slice(1).forEach(obj => this.canvas.remove(obj));
             this.canvas.requestRenderAll();

@@ -683,7 +683,7 @@ export class ContextMenu extends Component {
 			(width && !/^\d+$/.test(width)) ||
 			(height && !/^\d+$/.test(height))
 		) {
-			new Notice("Dimensions must be positive numbers");
+			new Notice("尺寸必须为正整数");
 			return;
 		}
 
@@ -700,7 +700,7 @@ export class ContextMenu extends Component {
 		);
 
 		if (matches.length === 0) {
-			new Notice("Failed to find image link in the current note.");
+			new Notice("未在当前笔记中找到图片链接。");
 			return;
 		}
 
@@ -717,8 +717,8 @@ export class ContextMenu extends Component {
 			}
 			new Notice(
 				newCaption === null
-					? "Image dimensions updated successfully."
-					: "Image caption and dimensions updated successfully."
+					? "图片尺寸更新成功。"
+					: "图片标题和尺寸更新成功。"
 			);
 			this.plugin.captionManager?.refresh();
 		};
@@ -726,13 +726,13 @@ export class ContextMenu extends Component {
 		if (matches.length > 1) {
 			new ConfirmDialog(
 				this.app,
-				"Confirm Updates",
-				`Found ${matches.length} matching image links. Update all?`,
-				"Update",
+				"确认更新",
+				`找到 ${matches.length} 个匹配的图片链接。是否全部更新？`,
+				"更新",
 				() => {
 					handleConfirmation().catch((error: unknown) => {
 						console.error("Failed to update image caption and dimensions:", error);
-						new Notice("Failed to update. See console for details.");
+						new Notice("更新失败。请查看控制台了解详情。");
 					});
 				}
 			).open();
@@ -814,14 +814,14 @@ export class ContextMenu extends Component {
 				nameGroup.appendChild(nameIcon);
 
 				const nameLabel = document.createElement("label");
-				nameLabel.textContent = "Name:";
+				nameLabel.textContent = "名称:";
 				nameLabel.setAttribute("for", "image-converter-name-input");
 				nameGroup.appendChild(nameLabel);
 
 				const nameInput = document.createElement("input");
 				nameInput.type = "text";
 				nameInput.value = fileNameWithoutExt;
-				nameInput.placeholder = "Enter a new image name";
+				nameInput.placeholder = "输入新的图片名称";
 				nameInput.className = "image-converter-contextmenu-name-input";
 				nameInput.id = "image-converter-name-input";
 				if (!isImageResolvable) {
@@ -842,14 +842,14 @@ export class ContextMenu extends Component {
 				pathGroup.appendChild(pathIcon);
 
 				const pathLabel = document.createElement("label");
-				pathLabel.textContent = "Folder:";
+				pathLabel.textContent = "文件夹:";
 				pathLabel.setAttribute("for", "image-converter-path-input");
 				pathGroup.appendChild(pathLabel);
 
 				const pathInput = document.createElement("input");
 				pathInput.type = "text";
 				pathInput.value = directoryPath;
-				pathInput.placeholder = "Enter a new path for the image";
+				pathInput.placeholder = "输入图片的新路径";
 				pathInput.className = "image-converter-contextmenu-path-input";
 				pathInput.id = "image-converter-path-input";
 				if (!isImageResolvable) {
@@ -876,7 +876,7 @@ export class ContextMenu extends Component {
 					captionGroup.appendChild(captionIcon);
 
 					const captionLabel = document.createElement("label");
-					captionLabel.textContent = "Caption:";
+					captionLabel.textContent = "标题:";
 					captionLabel.setAttribute(
 						"for",
 						"image-converter-caption-input"
@@ -885,7 +885,7 @@ export class ContextMenu extends Component {
 
 					captionInput = document.createElement("input");
 					captionInput.type = "text";
-					captionInput.placeholder = "Loading caption...";
+					captionInput.placeholder = "加载标题中...";
 					captionInput.className =
 						"image-converter-contextmenu-caption-input";
 					captionInput.id = "image-converter-caption-input";
@@ -904,7 +904,7 @@ export class ContextMenu extends Component {
 				dimensionsGroup.appendChild(dimensionsIcon);
 
 				const dimensionsLabel = document.createElement("label");
-				dimensionsLabel.textContent = "Size:";
+				dimensionsLabel.textContent = "尺寸:";
 				dimensionsLabel.setAttribute(
 					"for",
 					"image-converter-width-input"
@@ -915,7 +915,7 @@ export class ContextMenu extends Component {
 				const widthInput = document.createElement("input");
 				widthInput.type = "number";
 				widthInput.min = "1";
-				widthInput.placeholder = "W";
+				widthInput.placeholder = "宽";
 				widthInput.className =
 					"image-converter-contextmenu-dimension-input";
 				widthInput.id = "image-converter-width-input";
@@ -924,7 +924,7 @@ export class ContextMenu extends Component {
 				const heightInput = document.createElement("input");
 				heightInput.type = "number";
 				heightInput.min = "1";
-				heightInput.placeholder = "H";
+				heightInput.placeholder = "高";
 				heightInput.className =
 					"image-converter-contextmenu-dimension-input";
 				heightInput.id = "image-converter-height-input";
@@ -1006,11 +1006,11 @@ export class ContextMenu extends Component {
 					this.loadCurrentCaption(img, activeFile)
 						.then((currentCaption) => {
 							captionInput.value = currentCaption;
-							captionInput.placeholder = "Enter a custom caption";
+							captionInput.placeholder = "输入自定义标题";
 						})
 						.catch((error: unknown) => {
 							console.error("Failed to load caption:", error);
-							captionInput.placeholder = "Enter a custom caption";
+							captionInput.placeholder = "输入自定义标题";
 						});
 				}
 
@@ -1059,7 +1059,7 @@ export class ContextMenu extends Component {
 					maybeDom.appendChild(inputContainer);
 				} else {
 					// Minimal fallback for test environment without MenuItem DOM
-					(menuItem as MenuItemWithDom & { setTitle?: (title: string) => void }).setTitle?.("Image tools");
+					(menuItem as MenuItemWithDom & { setTitle?: (title: string) => void }).setTitle?.("图片工具");
 				}
 			});
 		}
@@ -1108,18 +1108,18 @@ export class ContextMenu extends Component {
 		);
 
 		if (!newName.trim()) {
-			new Notice("Please enter a new file name.");
+			new Notice("请输入新的文件名。");
 			return;
 		}
 
 		newName = this.folderAndFilenameManagement.sanitizeFilename(newName);
 
 		if (/^[.]+$/.test(newName.trim())) {
-			new Notice("Please enter a valid file name");
+			new Notice("请输入有效的文件名");
 			return;
 		}
 		if (!newDirectoryPath.trim()) {
-			new Notice("Please enter a new path.");
+			new Notice("请输入新的路径。");
 			return;
 		}
 
@@ -1145,7 +1145,7 @@ export class ContextMenu extends Component {
 							newPath
 						);
 						img.src = this.app.vault.getResourcePath(abstractFile);
-						new Notice("Image name updated successfully");
+						new Notice("图片名称更新成功");
 					}
 				}
 				// Handle Movea
@@ -1171,11 +1171,11 @@ export class ContextMenu extends Component {
 								);
 							if (safeRenameSuccessful) {
 								new Notice(
-									"Image path updated (case-sensitive change)."
+									"图片路径已更新（区分大小写的更改）。"
 								);
 							} else {
 								new Notice(
-									"Image path update failed (case-sensitive change)."
+									"图片路径更新失败（区分大小写的更改）。"
 								);
 							}
 						} else {
@@ -1183,7 +1183,7 @@ export class ContextMenu extends Component {
 								abstractFile,
 								newPath
 							);
-							new Notice("Image path updated successfully");
+							new Notice("图片路径更新成功");
 						}
 						img.src = this.app.vault.getResourcePath(abstractFile);
 						const leaf = this.app.workspace.getMostRecentLeaf();
@@ -1199,7 +1199,7 @@ export class ContextMenu extends Component {
 				}
 			} catch (error) {
 				console.error("Failed to update image path:", error);
-				new Notice("Failed to update image path");
+				new Notice("更新图片路径失败");
 			}
 		}
 		this.hideMenu(menu);
@@ -1216,7 +1216,7 @@ export class ContextMenu extends Component {
 	 */
 	addOpenInNewWindowMenuItem(menu: Menu, img: HTMLImageElement) {
 		menu.addItem((item) => {
-			item.setTitle("Open in new window")
+			item.setTitle("在新窗口中打开")
 				.setIcon("square-arrow-out-up-right")
 				.onClick(async () => {
 					try {
@@ -1234,7 +1234,7 @@ export class ContextMenu extends Component {
 							}
 						}
 					} catch (error) {
-						new Notice("Failed to open in new window");
+						new Notice("在新窗口中打开失败");
 						console.error(error);
 					}
 				});
@@ -1623,7 +1623,7 @@ export class ContextMenu extends Component {
 	 */
 	addCutImageMenuItem(menu: Menu, event: MouseEvent) {
 		menu.addItem((item) => {
-			item.setTitle("Cut")
+			item.setTitle("剪切")
 				.setIcon("scissors")
 				.onClick(async () => {
 					await this.cutImageAndLinkFromNote(event);
@@ -1642,7 +1642,7 @@ export class ContextMenu extends Component {
 
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 		if (!activeView) {
-			new Notice("No active Markdown view found");
+			new Notice("未找到活动的 Markdown 视图");
 			return;
 		}
 
@@ -1665,7 +1665,7 @@ export class ContextMenu extends Component {
 				);
 				if (!found) {
 					// eslint-disable-next-line obsidianmd/ui/sentence-case -- Base64 is a proper technical term
-					new Notice("Failed to find Base64 image link");
+					new Notice("未找到 Base64 图片链接");
 				}
 				return;
 			}
@@ -1685,7 +1685,7 @@ export class ContextMenu extends Component {
 			);
 
 			if (matches.length === 0) {
-				new Notice("Failed to find image link in the current note.");
+				new Notice("未在当前笔记中找到图片链接。");
 				return;
 			}
 
@@ -1700,7 +1700,7 @@ export class ContextMenu extends Component {
 					);
 				}
 				new Notice(
-					"Image link(s) cut from note and copied to clipboard"
+					"图片链接已从笔记中剪切并复制到剪贴板"
 				);
 			};
 
@@ -1708,13 +1708,13 @@ export class ContextMenu extends Component {
 				// Show confirmation modal
 				new ConfirmDialog(
 					this.app,
-					"Confirm Cut",
-					`Found ${matches.length} matching image links inside current note. Do you want to cut all of them?`,
-					"Cut",
+					"确认剪切",
+					`在当前笔记中找到 ${matches.length} 个匹配的图片链接。是否全部剪切？`,
+					"剪切",
 					() => {
 						handleConfirmation().catch((error: unknown) => {
 							console.error("Failed to cut image links:", error);
-							new Notice("Failed to cut. See console for details.");
+							new Notice("剪切失败。请查看控制台了解详情。");
 						});
 					}
 				).open();
@@ -1724,7 +1724,7 @@ export class ContextMenu extends Component {
 			}
 		} catch (error) {
 			console.error("Error cutting image:", error);
-			new Notice("Failed to cut image. Check console for details.");
+			new Notice("剪切图片失败。请查看控制台了解详情。");
 		}
 	}
 
@@ -1740,7 +1740,7 @@ export class ContextMenu extends Component {
 	addCopyImageMenuItem(menu: Menu, event: MouseEvent) {
 		menu.addItem((item: MenuItem) =>
 			item
-				.setTitle("Copy image")
+				.setTitle("复制图片")
 				.setIcon("copy")
 				.onClick(async () => {
 					await this.copyImageToClipboard(event);
@@ -1765,17 +1765,17 @@ export class ContextMenu extends Component {
 				canvas.height = img.naturalHeight;
 				const ctx = canvas.getContext("2d");
 				if (!ctx) {
-					new Notice("Failed to get canvas context");
+					new Notice("获取画布上下文失败");
 					return;
 				}
 				ctx.drawImage(img, 0, 0);
 				const blob = await this.canvasToBlob(canvas);
 				const item = new ClipboardItem({ [blob.type]: blob });
 				await navigator.clipboard.write([item]);
-				new Notice("Image copied to clipboard");
+				new Notice("图片已复制到剪贴板");
 			} catch (error) {
 				console.error("Failed to copy image:", error);
-				new Notice("Failed to copy image to clipboard");
+				new Notice("复制图片到剪贴板失败");
 			}
 		});
 
@@ -1795,7 +1795,7 @@ export class ContextMenu extends Component {
 		menu.addItem((item: MenuItem) =>
 			item
 				// eslint-disable-next-line obsidianmd/ui/sentence-case -- Base64 is a proper technical term
-				.setTitle("Copy as Base64 encoded image")
+				.setTitle("复制为 Base64 编码图片")
 				.setIcon("copy")
 				.onClick(() => {
 					void this.copyImageAsBase64(event);
@@ -1819,18 +1819,18 @@ export class ContextMenu extends Component {
 				canvas.height = img.naturalHeight;
 				const ctx = canvas.getContext("2d");
 				if (!ctx) {
-					new Notice("Failed to get canvas context");
+					new Notice("获取画布上下文失败");
 					return;
 				}
 				ctx.drawImage(img, 0, 0);
 				const dataURL = canvas.toDataURL();
 				await navigator.clipboard.writeText(`<img src="${dataURL}"/>`);
 				// eslint-disable-next-line obsidianmd/ui/sentence-case -- Base64 is a proper technical term
-				new Notice("Image copied to clipboard as Base64");
+				new Notice("图片已作为 Base64 复制到剪贴板");
 			} catch (error) {
 				console.error("Failed to copy image as Base64:", error);
 				// eslint-disable-next-line obsidianmd/ui/sentence-case -- Base64 is a proper technical term
-				new Notice("Failed to copy image as Base64");
+				new Notice("复制图片为 Base64 失败");
 			}
 		});
 
@@ -1854,7 +1854,7 @@ export class ContextMenu extends Component {
 		event: MouseEvent
 	) {
 		menu.addItem((item) => {
-			item.setTitle("Convert/compress...")
+			item.setTitle("转换/压缩...")
 				.setIcon("cog")
 				.onClick(async () => {
 					try {
@@ -1864,14 +1864,14 @@ export class ContextMenu extends Component {
 								MarkdownView
 							);
 					if (!activeView) {
-						new Notice("No active Markdown view");
+						new Notice("未找到活动的 Markdown 视图");
 						return;
 					}
 
 					// Get the current note being viewed
 					const currentFile = activeView.file;
 					if (!currentFile) {
-						new Notice("No current file found");
+						new Notice("未找到当前文件");
 							return;
 						}
 
@@ -1879,7 +1879,7 @@ export class ContextMenu extends Component {
 						const srcAttribute = img.getAttribute("src");
 						if (!srcAttribute) {
 							new Notice(
-								"No source attribute found on the image"
+								"未找到图片的源属性"
 							);
 							return;
 						}
@@ -1890,7 +1890,7 @@ export class ContextMenu extends Component {
 						);
 						if (!filename) {
 							new Notice(
-								"Unable to extract filename from the image source"
+								"无法从图片源中提取文件名"
 							);
 							return;
 						}
@@ -1904,7 +1904,7 @@ export class ContextMenu extends Component {
 								"No matching files found for:",
 								filename
 							);
-							new Notice(`Unable to find image: ${filename}`);
+							new Notice(`无法找到图片：${filename}`);
 							return;
 						}
 
@@ -1930,11 +1930,11 @@ export class ContextMenu extends Component {
 								file
 							).open();
 					} else {
-						new Notice("Not a valid image file");
+						new Notice("不是有效的图片文件");
 					}
 					} catch (error) {
 						console.error("Error processing image:", error);
-						new Notice("Error processing image");
+						new Notice("处理图片时出错");
 					}
 				});
 		});
@@ -1951,28 +1951,28 @@ export class ContextMenu extends Component {
 	 */
 	addCropRotateFlipMenuItem(menu: Menu, img: HTMLImageElement) {
 		menu.addItem((item) => {
-			item.setTitle("Crop/rotate/flip")
+			item.setTitle("裁剪/旋转/翻转")
 				.setIcon("scissors")
 				.onClick(async () => {
 					// Get the active markdown view
 					const activeView =
 						this.app.workspace.getActiveViewOfType(MarkdownView);
 					if (!activeView) {
-						new Notice("No active Markdown view");
+						new Notice("未找到活动的 Markdown 视图");
 						return;
 					}
 
 					// Get the current file (note) being viewed
 					const currentFile = activeView.file;
 					if (!currentFile) {
-						new Notice("No current file found");
+						new Notice("未找到当前文件");
 						return;
 					}
 
 					// Get the filename from the src attribute
 					const srcAttribute = img.getAttribute("src");
 					if (!srcAttribute) {
-						new Notice("No source attribute found");
+						new Notice("未找到源属性");
 						return;
 					}
 
@@ -1988,7 +1988,7 @@ export class ContextMenu extends Component {
 
 					if (matchingFiles.length === 0) {
 						console.error("No matching files found for:", filename);
-						new Notice(`Unable to find image: ${filename}`);
+						new Notice(`无法找到图片：${filename}`);
 						return;
 					}
 
@@ -2007,7 +2007,7 @@ export class ContextMenu extends Component {
 					if (file instanceof TFile) {
 						new Crop(this.app, file).open();
 					} else {
-						new Notice("Unable to locate image file");
+						new Notice("无法定位图片文件");
 					}
 				});
 		});
@@ -2019,7 +2019,7 @@ export class ContextMenu extends Component {
 
 	addAnnotateImageMenuItem(menu: Menu, img: HTMLImageElement) {
 		menu.addItem((item) => {
-			item.setTitle("Annotate image")
+			item.setTitle("标注图片")
 				.setIcon("pencil")
 				.onClick(async () => {
 					try {
@@ -2029,21 +2029,21 @@ export class ContextMenu extends Component {
 							MarkdownView
 						);
 					if (!activeView) {
-						new Notice("No active Markdown view");
+						new Notice("未找到活动的 Markdown 视图");
 						return;
 					}
 
 					// Get the current file (note) being viewed
 					const currentFile = activeView.file;
 					if (!currentFile) {
-						new Notice("No current file found");
+						new Notice("未找到当前文件");
 						return;
 					}
 
 					// Get the filename from the src attribute
 					const srcAttribute = img.getAttribute("src");
 					if (!srcAttribute) {
-						new Notice("No source attribute found");
+						new Notice("未找到源属性");
 							return;
 						}
 
@@ -2063,7 +2063,7 @@ export class ContextMenu extends Component {
 								"No matching files found for:",
 								filename
 							);
-							new Notice(`Unable to find image: ${filename}`);
+							new Notice(`无法找到图片：${filename}`);
 							return;
 						}
 
@@ -2090,11 +2090,11 @@ export class ContextMenu extends Component {
 								file
 							).open();
 						} else {
-							new Notice("Unable to locate image file");
+							new Notice("无法定位图片文件");
 						}
 					} catch (error) {
 						console.error("Image location error:", error);
-						new Notice("Error processing image path");
+						new Notice("处理图片路径时出错");
 					}
 				});
 		});
@@ -2111,7 +2111,7 @@ export class ContextMenu extends Component {
 	 */
 	addShowInNavigationMenuItem(menu: Menu, img: HTMLImageElement) {
 		menu.addItem((item) => {
-			item.setTitle("Show in navigation")
+			item.setTitle("在导航栏中显示")
 				.setIcon("folder-open")
 				.onClick(async () => {
 					await this.showImageInNavigation(img);
@@ -2159,7 +2159,7 @@ export class ContextMenu extends Component {
 				}
 			}
 		} catch (error) {
-			new Notice("Failed to show in navigation");
+			new Notice("在导航栏中显示失败");
 			console.error(error);
 		}
 	}
@@ -2174,7 +2174,7 @@ export class ContextMenu extends Component {
 	 */
 	addShowInSystemExplorerMenuItem(menu: Menu, img: HTMLImageElement) {
 		menu.addItem((item) => {
-			item.setTitle("Show in system explorer")
+			item.setTitle("在系统文件管理器中显示")
 				.setIcon("arrow-up-right")
 				.onClick(async () => {
 					await this.showImageInSystemExplorer(img);
@@ -2195,7 +2195,7 @@ export class ContextMenu extends Component {
 				await this.app.showInFolder(imagePath);
 			}
 		} catch (error) {
-			new Notice("Failed to show in system explorer");
+			new Notice("在系统文件管理器中显示失败");
 			console.error(error);
 		}
 	}
@@ -2211,7 +2211,7 @@ export class ContextMenu extends Component {
 	 */
 	addDeleteImageAndLinkMenuItem(menu: Menu, event: MouseEvent) {
 		menu.addItem((item) => {
-			item.setTitle("Delete image and link")
+			item.setTitle("删除图片和链接")
 				.setIcon("trash")
 				.onClick(async () => {
 					await this.deleteImageAndLinkFromNote(event);
@@ -2230,7 +2230,7 @@ export class ContextMenu extends Component {
 
 		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 		if (!activeView) {
-			new Notice("No active Markdown view found");
+			new Notice("未找到活动的 Markdown 视图");
 			return;
 		}
 
@@ -2253,7 +2253,7 @@ export class ContextMenu extends Component {
 				);
 			if (!found) {
 				// eslint-disable-next-line obsidianmd/ui/sentence-case -- Base64 is a proper technical term
-				new Notice("Failed to find Base64 image link");
+				new Notice("未找到 Base64 图片链接");
 			}
 				return;
 			}
@@ -2271,7 +2271,7 @@ export class ContextMenu extends Component {
 			);
 
 			if (matches.length === 0) {
-				new Notice("Failed to find image link in the current note.");
+				new Notice("未在当前笔记中找到图片链接。");
 				return;
 			}
 
@@ -2289,7 +2289,7 @@ export class ContextMenu extends Component {
 
 			if (uniqueMatches.length === 0) {
 				new Notice(
-					"Failed to find unique image links in the current note."
+					"未在当前笔记中找到唯一的图片链接。"
 				); // Should not happen ideally as 'matches.length > 0' check is before, but good to have.
 				return;
 			}
@@ -2311,7 +2311,7 @@ export class ContextMenu extends Component {
 					);
 				}
 
-				new Notice("Image link(s) removed from note");
+				new Notice("图片链接已从笔记中移除");
 
 				// Delete the actual image file if it exists in the vault
 				if (imagePath) {
@@ -2322,7 +2322,7 @@ export class ContextMenu extends Component {
 						// file deletion settings are honored (e.g., "Move to system trash" vs
 						// "Permanently delete").
 						await this.app.fileManager.trashFile(imageFile);
-						new Notice("Image file moved to trash");
+						new Notice("图片文件已移至回收站");
 					}
 				}
 			};
@@ -2338,7 +2338,7 @@ export class ContextMenu extends Component {
 
 				// Add introductory text
 				const introText = document.createElement("p");
-				introText.textContent = `Found ${uniqueMatches.length} unique matching image links inside current note. Do you want to delete all of them?`; // Updated message
+				introText.textContent = `在当前笔记中找到 ${uniqueMatches.length} 个唯一匹配的图片链接。是否全部删除？`; // Updated message
 				messageContainer.appendChild(introText);
 
 				// Add details to the message container
@@ -2348,19 +2348,19 @@ export class ContextMenu extends Component {
 					const lineContent = match.line.trim();
 					const detailDiv = document.createElement("div");
 					detailDiv.addClass("image-converter-confirm-detail");
-					detailDiv.createSpan({ text: `  ${index + 1}. Line ${lineNumber}: ${lineContent}` });
+					detailDiv.createSpan({ text: `  ${index + 1}. 第 ${lineNumber} 行：${lineContent}` });
 					messageContainer.appendChild(detailDiv); // Append to messageContainer
 				});
 
 				new ConfirmDialog(
 					this.app,
-					"Confirm Delete",
+					"确认删除",
 					detailsFragment,
-					"Delete",
+					"删除",
 					() => {
 						handleConfirmation().catch((error: unknown) => {
 							console.error("Failed to delete image:", error);
-							new Notice("Failed to delete. See console for details.");
+							new Notice("删除失败。请查看控制台了解详情。");
 						});
 					}
 				).open();
@@ -2369,11 +2369,11 @@ export class ContextMenu extends Component {
 				await handleConfirmation();
 			} else {
 				// This case should not happen because of the initial check `if (uniqueMatches.length === 0)` but for completeness.
-				new Notice("No unique image links found to delete.");
+				new Notice("未找到可删除的唯一图片链接。");
 			}
 		} catch (error) {
 			console.error("Error deleting image:", error);
-			new Notice("Failed to delete image. Check console for details.");
+			new Notice("删除图片失败。请查看控制台了解详情。");
 		}
 	}
 

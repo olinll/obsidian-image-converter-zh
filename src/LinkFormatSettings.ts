@@ -18,14 +18,14 @@ export class LinkFormatSettings {
     constructor() {
         this.linkFormatPresets = [
             {
-                name: "Default (Wikilink, Shortest)",
+                name: "默认 (Wikilink, 最短路径)",
                 linkFormat: "wikilink",
                 pathFormat: "shortest",
                 prependCurrentDir: false,
                 hideFolders: false,
             },
             {
-                name: "Markdown, Relative",
+                name: "Markdown, 相对路径",
                 linkFormat: "markdown",
                 pathFormat: "relative",
                 prependCurrentDir: true,
@@ -33,7 +33,7 @@ export class LinkFormatSettings {
             },
             // ... more presets can be added here
         ];
-        this.selectedLinkFormatPreset = "Default (Wikilink, Shortest)";
+        this.selectedLinkFormatPreset = "默认 (Wikilink, 最短路径)";
     }
 
     // Add methods to manage presets (add, delete, update) if needed

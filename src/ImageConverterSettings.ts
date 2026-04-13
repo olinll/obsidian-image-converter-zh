@@ -237,18 +237,18 @@ export interface ImageConverterSettings {
 
 export const DEFAULT_SETTINGS: ImageConverterSettings = {
     folderPresets: [
-        { type: "DEFAULT", name: "Default (Obsidian setting)" },
-        { type: "ROOT", name: "Root folder" },
-        { type: "CURRENT", name: "Same folder as current note" },
+        { type: "DEFAULT", name: "默认 (Obsidian 设置)" },
+        { type: "ROOT", name: "根目录" },
+        { type: "CURRENT", name: "与当前笔记相同的文件夹" },
         // { type: "SUBFOLDER", name: "In subfolder under current note" }, // Example for adding SUBFOLDER later
     ],
-    selectedFolderPreset: "Default (Obsidian setting)",
+    selectedFolderPreset: "默认 (Obsidian 设置)",
     filenamePresets: [
         // { name: "Default (No Change)", customTemplate: "{imagename}", skipRenamePatterns: "", conflictResolution: "increment" }, // This must be disabled!!!
-        { name: "Keep original name", customTemplate: "{imagename}", skipRenamePatterns: "", conflictResolution: "increment" },
-        { name: "NoteName-Timestamp", customTemplate: "{notename}-{timestamp}", skipRenamePatterns: "", conflictResolution: "increment" },
+        { name: "保留原始名称", customTemplate: "{imagename}", skipRenamePatterns: "", conflictResolution: "increment" },
+        { name: "笔记名-时间戳", customTemplate: "{notename}-{timestamp}", skipRenamePatterns: "", conflictResolution: "increment" },
     ],
-    selectedFilenamePreset: "Keep original name",
+    selectedFilenamePreset: "保留原始名称",
     outputFormat: "NONE",
     quality: 100,
     colorDepth: 1,
@@ -273,7 +273,7 @@ export const DEFAULT_SETTINGS: ImageConverterSettings = {
     subfolderTemplate: "",
     conversionPresets: [
         {
-            name: "None",
+            name: "无",
             outputFormat: "NONE",
             quality: 100,
             colorDepth: 1,
@@ -293,7 +293,7 @@ export const DEFAULT_SETTINGS: ImageConverterSettings = {
             ffmpegPreset: "medium",
         },
         {
-            name: "WEBP (75, no resizing)",
+            name: "WEBP (75, 不调整大小)",
             outputFormat: "WEBP",
             quality: 75,
             colorDepth: 1,
@@ -313,7 +313,7 @@ export const DEFAULT_SETTINGS: ImageConverterSettings = {
             ffmpegPreset: "medium",
         },
         {
-            name: "PNGQUANT (65-80, no resizing)",
+            name: "PNGQUANT (65-80, 不调整大小)",
             outputFormat: "PNGQUANT",
             quality: 75, //Not really used, but can be used for unified settings,
             colorDepth: 1,
@@ -333,15 +333,15 @@ export const DEFAULT_SETTINGS: ImageConverterSettings = {
             ffmpegPreset: "medium",
         },
     ],
-    selectedConversionPreset: "None",
+    selectedConversionPreset: "无",
     globalPresets: [
         {
             name: "WebP 75",
-            folderPreset: "Default (Obsidian setting)",
-            filenamePreset: "NoteName-Timestamp",
-            conversionPreset: "WEBP (75, no resizing)",
-            linkFormatPreset: "Default (Wikilink, Shortest)",
-            resizePreset: "Default (No Resize)"
+            folderPreset: "默认 (Obsidian 设置)",
+            filenamePreset: "笔记名-时间戳",
+            conversionPreset: "WEBP (75, 不调整大小)",
+            linkFormatPreset: "默认 (Wikilink, 最短路径)",
+            resizePreset: "默认 (不调整大小)"
         }
     ],
     selectedGlobalPreset: "", // Base default remains none; fresh installs opt into "WebP 75" in loadSettings()
@@ -517,7 +517,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             switch (this.activeTab) {
                 case "folder":
                     this.renderPresetGroup(
-                        "Folder presets",
+                        "文件夹预设",
                         this.plugin.settings.folderPresets,
                         "selectedFolderPreset",
                         this.presetUIState.folder
@@ -525,7 +525,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     break;
                 case "filename":
                     this.renderPresetGroup(
-                        "Filename presets",
+                        "文件名预设",
                         this.plugin.settings.filenamePresets,
                         "selectedFilenamePreset",
                         this.presetUIState.filename
@@ -533,7 +533,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     break;
                 case "conversion":
                     this.renderPresetGroup(
-                        "Conversion presets",
+                        "转换预设",
                         this.plugin.settings.conversionPresets,
                         "selectedConversionPreset",
                         this.presetUIState.conversion
@@ -541,7 +541,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     break;
                 case "linkformat":
                     this.renderPresetGroup(
-                        "Link format presets",
+                        "链接格式预设",
                         this.plugin.settings.linkFormatSettings.linkFormatPresets,
                         "selectedLinkFormatPreset",
                         this.presetUIState.linkformat
@@ -549,7 +549,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     break;
                 case "resize":
                     this.renderPresetGroup(
-                        "Resize presets",
+                        "调整大小预设",
                         this.plugin.settings.nonDestructiveResizeSettings.resizePresets, // Correct type
                         "selectedResizePreset",
                         this.presetUIState.resize
@@ -575,8 +575,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         this.renderImageCaptionSettingsSection(containerEl);
 
         new Setting(containerEl)
-            .setName("Right-click menu")
-            .then((setting) => addInfoIcon(setting, "Enable to show a right-click context menu."))
+            .setName("右键菜单")
+            .then((setting) => addInfoIcon(setting, "启用后显示右键上下文菜单。"))
             .addToggle((toggle) =>
                 toggle
                     .setValue(this.plugin.settings.enableContextMenu)
@@ -584,20 +584,20 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                         this.plugin.settings.enableContextMenu = value;
                         await this.plugin.saveSettings();
                         if (!value) {
-                            new Notice("Context menu disabled. Reload Obsidian to see changes.", 5000);
+                            new Notice("右键菜单已禁用。请重新加载 Obsidian 以查看更改。", 5000);
                         } else {
-                            new Notice("Context menu enabled. Reload Obsidian to see changes.", 5000);
+                            new Notice("右键菜单已启用。请重新加载 Obsidian 以查看更改。", 5000);
                         }
                     })
             );
 
         new Setting(containerEl)
-            .setName("Cursor position after drop/paste")
-            .then((setting) => addInfoIcon(setting, "Where to place the cursor after dropping or pasting the image"))
+            .setName("拖放/粘贴后的光标位置")
+            .then((setting) => addInfoIcon(setting, "拖放或粘贴图片后光标放置的位置"))
             .addDropdown((dropdown) => {
                 dropdown
-                    .addOption("front", "At the front of the link")
-                    .addOption("back", "At the back of the link")
+                    .addOption("front", "在链接前面")
+                    .addOption("back", "在链接后面")
                     .setValue(this.plugin.settings.dropPasteCursorLocation)
                     .onChange(async (value: "front" | "back") => {
                         this.plugin.settings.dropPasteCursorLocation = value;
@@ -607,8 +607,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
 
         new Setting(containerEl)
-            .setName("Never process these filenames")
-            .then((setting) => addInfoIcon(setting, "A comma-separated list of file names or patterns that the plugin should never process. Supports glob (*) and regex (enclosed in `/` or `r/` or `regex:`). E.g., `old.png, /^_/, r/temp-.*\\.jpg$/` . Or simply skip all cat images e.g.: /cat/ or all gif images *.gif"))
+            .setName("从不处理这些文件名")
+            .then((setting) => addInfoIcon(setting, "以逗号分隔的文件名或模式列表，插件将永远不处理这些文件。支持 glob（*）和正则表达式（用 `/` 或 `r/` 或 `regex:` 包裹）。例如：`old.png, /^_/, r/temp-.*\\.jpg$/`。或者简单地跳过所有猫的图片：/cat/，或所有 gif 图片：*.gif"))
             .addTextArea((text) => {
                 text.setValue(this.plugin.settings.neverProcessFilenames)
                     .onChange(async (value) => {
@@ -619,8 +619,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             });
 
         new Setting(containerEl)
-            .setName('Show notification for image size changes')
-            .then((setting) => addInfoIcon(setting, 'Display a notification showing how much space was saved after processing an image.'))
+            .setName('显示图片大小变化通知')
+            .then((setting) => addInfoIcon(setting, '处理图片后显示节省了多少空间的通知。'))
             .addToggle(toggle => toggle
                 .setValue(this.plugin.settings.showSpaceSavedNotification)
                 .onChange(async (value) => {
@@ -631,13 +631,13 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
 
         new Setting(containerEl)
-            .setName("Show window")
-            .setDesc("Choose whether to show processing options on each image drop/paste")
+            .setName("显示窗口")
+            .setDesc("选择是否在每次拖放/粘贴图片时显示处理选项")
             .addDropdown((dropdown) => {
                 dropdown
-                    .addOption("always", "Always show")
-                    .addOption("never", "Never show")
-                    .addOption("ask", "Ask each time")
+                    .addOption("always", "始终显示")
+                    .addOption("never", "从不显示")
+                    .addOption("ask", "每次询问")
                     .setValue(this.plugin.settings.modalBehavior)
                     .onChange(async (value: ModalBehavior) => {
                         this.plugin.settings.modalBehavior = value;
@@ -679,7 +679,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         chevronIcon.addClass("image-converter-chevron-icon");
 
         // Add a label that changes based on visibility
-        const toggleLabel = toggleVisibilityEl.createEl("span", { text: "Drop/paste presets", cls: "settings-section-title" });
+        const toggleLabel = toggleVisibilityEl.createEl("span", { text: "拖放/粘贴预设", cls: "settings-section-title" });
 
         // Add click handler to toggle visibility specifically to the toggle element
         toggleVisibilityEl.onClickEvent((event: MouseEvent) => {
@@ -692,10 +692,10 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             // Update icon and label based on new visibility state
             if (this.presetUIState.globalPresetVisible) {
                 setIcon(chevronIcon, "chevron-down"); // Point down when expanded
-                toggleLabel.textContent = "Drop/paste presets";
+                toggleLabel.textContent = "拖放/粘贴预设";
             } else {
                 setIcon(chevronIcon, "chevron-right"); // Point right when collapsed
-                toggleLabel.textContent = "Drop/paste presets";
+                toggleLabel.textContent = "拖放/粘贴预设";
             }
 
             this.display(); // Re-render the settings tab
@@ -704,9 +704,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // --- Dropdown ---
         new Setting(globalPresetContainer)
             // .setName("Drop/paste presets")
-            .setDesc("Quickly apply a combination of presets")
+            .setDesc("快速应用预设组合")
             .addDropdown((dropdown) => {
-                dropdown.addOption("", "None");
+                dropdown.addOption("", "无");
                 this.plugin.settings.globalPresets.forEach((preset) => {
                     dropdown.addOption(preset.name, preset.name);
                 });
@@ -737,7 +737,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // "Save as New Preset" button
         new ButtonComponent(globalPresetContainer)
             .setIcon("plus")
-    .setTooltip("Save current selection as a new global preset")
+    .setTooltip("将当前选择保存为新的全局预设")
             .onClick((event: MouseEvent) => {
                 // Prevent the click from affecting the global visibility toggle
                 event.stopPropagation();
@@ -762,15 +762,15 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             new ButtonComponent(globalPresetContainer)
                 .setIcon("trash")
                 .setClass("danger")
-    .setTooltip("Delete selected global preset")
+    .setTooltip("删除选中的全局预设")
             .onClick((event: MouseEvent) => {
                     // Prevent the click from affecting the global visibility toggle
                     event.stopPropagation();
                     new ConfirmDialog(
                         this.app,
-                        "Confirm Delete",
-                        `Are you sure you want to delete the global preset "${this.plugin.settings.selectedGlobalPreset}"?`,
-                        "Delete",
+                        "确认删除",
+                        `确定要删除全局预设「${this.plugin.settings.selectedGlobalPreset}」吗？`,
+                        "删除",
                                   () => {
                             this.plugin.settings.globalPresets = this.plugin.settings.globalPresets.filter(
                                 (presetItem) => presetItem.name !== this.plugin.settings.selectedGlobalPreset
@@ -804,7 +804,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         alignmentChevronIcon.addClass("settings-section-chevron-icon");
 
         // Section Title
-        toggleAlignmentVisibilityEl.createEl("span", { text: "Image alignment", cls: "settings-section-title" });
+        toggleAlignmentVisibilityEl.createEl("span", { text: "图片对齐", cls: "settings-section-title" });
         // // Clarification Text
         // toggleAlignmentVisibilityEl.createEl("span", {
         //     text: "For changes to take effect, please reload the app",
@@ -820,9 +820,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                         this.plugin.settings.isImageAlignmentEnabled = value;
                         await this.plugin.saveSettings();
                         if (!value) {
-                            new Notice("Image alignment disabled. Reload Obsidian to see changes.", 5000);
+                            new Notice("图片对齐已禁用。请重新加载 Obsidian 以查看更改。", 5000);
                         } else {
-                            new Notice("Image alignment enabled. Reload Obsidian to see changes.", 5000);
+                            new Notice("图片对齐已启用。请重新加载 Obsidian 以查看更改。", 5000);
                         }
                         this.display(); // Refresh the settings UI
                     })
@@ -850,8 +850,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         if (this.plugin.settings.isImageAlignmentEnabled) { // Conditionally render cleanup options
             new Setting(imageAlignmentSection)
-                .setName("Default alignment for new images")
-                .setDesc("Automatically apply this alignment when inserting new images. Set to 'none' to disable.")
+                .setName("新图片的默认对齐方式")
+                .setDesc("插入新图片时自动应用此对齐方式。设置为\u201c无\u201d以禁用。")
                 .addDropdown(dropdown => dropdown
                     .addOptions({
                         'none': 'None',
@@ -868,19 +868,19 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             // --- Cache Location Setting ---
             new Setting(imageAlignmentSection)
-                .setName("Image alignment cache location")
+                .setName("图片对齐缓存位置")
                 .setDesc(
-                    "Choose where to store the cache file for image alignments. " +
-                    "Note: App reload required."
+                    "选择图片对齐缓存文件的存储位置。" +
+                    "注意：需要重新加载应用。"
                 )
                 .then((setting) => addInfoIcon(
                     setting,
-                    "If you use Obsidian Sync, it is strongly recommended to use the SAME location on all your devices to ensure consistent behavior. Default: Obsidian's config folder (syncable)."
+                    "如果使用 Obsidian 同步，强烈建议在所有设备上使用相同的位置以确保一致的行为。默认：Obsidian 配置文件夹（可同步）。"
                 ))
                 .addDropdown(dropdown => dropdown
                     .addOptions({
-                        config: "Within config folder (syncable)",
-                        plugin: "Within plugin folder (not syncable)",
+                        config: "配置文件夹内（可同步）",
+                        plugin: "插件文件夹内（不可同步）",
                     })
                     .setValue(this.plugin.settings.imageAlignmentCacheLocation)
                     .onChange(async (value: "config" | "plugin") => {
@@ -892,7 +892,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageAlignmentSection) // Interval setting is now inside the collapsible section
-                .setName("Image alignment cache cleanup interval")
+                .setName("图片对齐缓存清理间隔")
                 .setDesc(
                     "Interval (in minutes) to clean up redundant entries from image alignment cache. Default: 1 hour (0 to disable)"
                 )
@@ -931,7 +931,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         dragResizeChevronIcon.addClass("settings-section-chevron-icon");
 
         // Section Title
-        toggleDragResizeVisibilityEl.createEl("span", { text: "Drag & scroll resize", cls: "settings-section-title" });
+        toggleDragResizeVisibilityEl.createEl("span", { text: "拖拽和滚轮调整大小", cls: "settings-section-title" });
         // // Clarification Text
         // toggleDragResizeVisibilityEl.createEl("span", {
         //     text: "For changes to take effect, please reload the app",
@@ -947,9 +947,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                         this.plugin.settings.isImageResizeEnbaled = value;
                         await this.plugin.saveSettings();
                         if (!value) {
-                            new Notice("Image resizing disabled. Reload Obsidian to see changes.", 5000);
+                            new Notice("图片调整大小已禁用。请重新加载 Obsidian 以查看更改。", 5000);
                         } else {
-                            new Notice("Image resizing enabled. Reload Obsidian to see changes.", 5000);
+                            new Notice("图片调整大小已启用。请重新加载 Obsidian 以查看更改。", 5000);
                         }
                         this.display(); // Refresh the settings UI
                     })
@@ -978,9 +978,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         if (this.plugin.settings.isImageResizeEnbaled) { // Conditionally render cleanup options
             // --- Checkboxes for Drag and Scroll Resize ---
             new Setting(imageDragResizeSection)
-                .setName("Enable drag resize")
-                .setDesc("Allow resizing images by dragging edges of the image.")
-                .then((setting) => addInfoIcon(setting, "This creates a new <DIV> under the image to show resizing HANDLES. But this might cause some incompatibility with certain themes and cause images to jump around."))
+                .setName("启用拖拽调整大小")
+                .setDesc("允许通过拖拽图片边缘来调整大小。")
+                .then((setting) => addInfoIcon(setting, "这会在图片下方创建一个新的 <DIV> 来显示调整大小的手柄。但这可能与某些主题不兼容，导致图片跳动。"))
                 .addToggle((toggle) =>
                     toggle
                         .setValue(this.plugin.settings.isDragResizeEnabled)
@@ -997,8 +997,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 const apectRatioSettingsContainer = imageDragResizeSection.createDiv('fix-aspect-ratio-settings');
 
                 new Setting(apectRatioSettingsContainer)
-                    .setName('Lock the aspect ratio when dragging')
-                    .setDesc('Prevent accidental distortions of image aspect ratio when dragging to resize')
+                    .setName('拖拽时锁定宽高比')
+                    .setDesc('防止拖拽调整大小时意外变形')
                     .addToggle(toggle => toggle
                         .setValue(this.plugin.settings.isDragAspectRatioLocked)
                         .onChange(async (value) => {
@@ -1010,8 +1010,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
 
             new Setting(imageDragResizeSection)
-                .setName('Enable scroll-wheel resize')
-                .setDesc('Allow resizing images using the scroll wheel')
+                .setName('启用滚轮调整大小')
+                .setDesc('允许使用滚轮调整图片大小')
                 .addToggle(toggle => toggle
                     .setValue(this.plugin.settings.isScrollResizeEnabled)
                     .onChange(async (value) => {
@@ -1027,8 +1027,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 const scrollSettingsContainer = imageDragResizeSection.createDiv('scroll-resize-settings');
 
                 new Setting(scrollSettingsContainer)
-                    .setName('Scroll-wheel modifier key')
-                    .setDesc('Key that must be held while using scroll-wheel to resize')
+                    .setName('滚轮修饰键')
+                    .setDesc('使用滚轮调整大小时需要按住的键')
                     .addDropdown(dropdown => dropdown
                         .addOptions({
                             'None': 'None',
@@ -1044,8 +1044,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                         }));
 
                 new Setting(scrollSettingsContainer)
-                    .setName('Scroll-wheel resize sensitivity')
-                    .setDesc('Adjust how sensitive the scroll-wheel resize is (0.01-1.0)')
+                    .setName('滚轮调整灵敏度')
+                    .setDesc('调整滚轮调整大小的灵敏度 (0.01-1.0)')
                     .addSlider(slider => slider
                         .setLimits(0.01, 1, 0.01)
                         .setValue(this.plugin.settings.resizeSensitivity)
@@ -1057,9 +1057,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             }
 
             new Setting(imageDragResizeSection)
-                .setName("Disable Obsidian image selection on click")
-                .then((setting) => addInfoIcon(setting, "Keep focus in the editor when clicking an internal image in live preview instead of showing Obsidian's default outline/resize corner. Cursor placement follows the drop/paste cursor position setting."))
-                .setDesc("Keep focus in the editor when clicking an internal image in live preview instead of showing Obsidian's default outline/resize corner. Cursor placement follows the drop/paste cursor position setting.")
+                .setName("禁用 Obsidian 点击选中图片")
+                .then((setting) => addInfoIcon(setting, "在实时预览中点击内部图片时保持编辑器焦点，而不是显示 Obsidian 默认的轮廓/调整角。光标位置遵循拖放/粘贴光标位置设置。"))
+                .setDesc("在实时预览中点击内部图片时保持编辑器焦点，而不是显示 Obsidian 默认的轮廓/调整角。光标位置遵循拖放/粘贴光标位置设置。")
                 .addToggle((toggle) =>
                     toggle
                         .setValue(this.plugin.settings.disableObsidianImageSelectionOnClick)
@@ -1071,15 +1071,15 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             // New Setting: Resize Cursor Location
             new Setting(imageDragResizeSection)
-                .setName("Cursor position during resize")
+                .setName("调整大小时的光标位置")
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Intentional messaging style
-                .then((setting) => addInfoIcon(setting, "Where to place the cursor when resizing an image. Note: 'don't move cursor' - will try to keep your exisiting cursor in place but if you DRAG-RESIZE and cursor is still over the image when you finish resizing, it will get the text selected."))
+                .then((setting) => addInfoIcon(setting, "调整图片大小时光标放置的位置。注意：「不移动光标」会尝试保持现有光标位置，但如果您拖拽调整大小时光标仍在图片上方，完成调整后文本会被选中。"))
                 .addDropdown((dropdown) => {
                     dropdown
-                        .addOption("front", "At the front of the link")
-                        .addOption("back", "At the back of the link")
-                        .addOption("below", "1 line below the image")
-                        .addOption("none", "Don't move cursor")
+                        .addOption("front", "在链接前面")
+                        .addOption("back", "在链接后面")
+                        .addOption("below", "图片下方一行")
+                        .addOption("none", "不移动光标")
                         .setValue(this.plugin.settings.resizeCursorLocation)
                         .onChange(async (value: "front" | "back" | "below" | "none") => {
                             this.plugin.settings.resizeCursorLocation = value;
@@ -1088,8 +1088,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 });
 
             new Setting(imageDragResizeSection)
-                .setName("Allow resizing in reading mode")
-                .setDesc("Non-destructive resizing in reading mode is only visual, thus if it is too distractive you can disable it.")
+                .setName("允许在阅读模式下调整大小")
+                .setDesc("阅读模式下的非破坏性调整仅为视觉效果，如果觉得干扰可以禁用。")
                 .addToggle((toggle) =>
                     toggle
                         .setValue(this.plugin.settings.isResizeInReadingModeEnabled)
@@ -1123,7 +1123,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         captionChevronIcon.addClass("settings-section-chevron-icon");
 
         // Section Title
-        toggleCaptionVisibilityEl.createEl("span", { text: "Captions", cls: "settings-section-title" });
+        toggleCaptionVisibilityEl.createEl("span", { text: "图片标题", cls: "settings-section-title" });
         // // Clarification Text
         // toggleCaptionVisibilityEl.createEl("span", {
         //     text: "For changes to take effect, please reload the app",
@@ -1139,9 +1139,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                         this.plugin.settings.enableImageCaptions = value;
                         await this.plugin.saveSettings();
                         if (!value) {
-                            new Notice("Image captions disabled. Reload Obsidian to see changes.", 5000);
+                            new Notice("图片标题已禁用。请重新加载 Obsidian 以查看更改。", 5000);
                         } else {
-                            new Notice("Image captions enabled. Reload Obsidian to see changes.", 5000);
+                            new Notice("图片标题已启用。请重新加载 Obsidian 以查看更改。", 5000);
                         }
                         this.display();
                     })
@@ -1170,12 +1170,12 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // --- Image Captions Settings (Moved from display() function) ---
         if (this.plugin.settings.enableImageCaptions) {
             new Setting(imageCaptionSection)
-                .setName("Text alignment within caption")
+                .setName("标题文字对齐方式")
                 .addDropdown(dropdown =>
                     dropdown.addOptions({
-                        "left": "Left",
-                        "center": "Center",
-                        "right": "Right"
+                        "left": "左对齐",
+                        "center": "居中",
+                        "right": "右对齐"
                     })
                         .setValue(this.plugin.settings.captionAlignment)
                         .onChange(async (value) => {
@@ -1186,14 +1186,14 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Text transform")
-                .setDesc("Set text transformation")
+                .setName("文字转换")
+                .setDesc("设置文字转换方式")
                 .addDropdown(dropdown =>
                     dropdown.addOptions({
-                        "none": "None",
-                        "uppercase": "UPPERCASE",
-                        "lowercase": "lowercase",
-                        "capitalize": "Capitalize"
+                        "none": "无",
+                        "uppercase": "全部大写",
+                        "lowercase": "全部小写",
+                        "capitalize": "首字母大写"
                     })
                         .setValue(this.plugin.settings.captionTextTransform)
                         .onChange(async (value) => {
@@ -1204,8 +1204,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection) // Font Size Setting is now FIRST setting in the section
-                .setName("Font size")
-                .setDesc("Set the font size for image captions (e.g., 12px, 1.2em).")
+                .setName("字体大小")
+                .setDesc("设置图片标题的字体大小（例如 12px、1.2em）。")
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionFontSize)
                         .onChange(async (value) => {
@@ -1216,17 +1216,17 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Weight")
-                .setDesc("Set font weight (e.g., normal, bold, 600)")
+                .setName("字重")
+                .setDesc("设置字重（例如 normal、bold、600）")
                 .addDropdown(dropdown =>
                     dropdown.addOptions({
-                        "normal": "Normal",
-                        "bold": "Bold",
-                        ["300"]: "Light",
-                        ["400"]: "Regular",
-                        ["500"]: "Medium",
-                        ["600"]: "Semi-bold",
-                        ["700"]: "Bold"
+                        "normal": "正常",
+                        "bold": "粗体",
+                        ["300"]: "细体",
+                        ["400"]: "常规",
+                        ["500"]: "中等",
+                        ["600"]: "半粗",
+                        ["700"]: "粗体"
                     })
                         .setValue(this.plugin.settings.captionFontWeight)
                         .onChange(async (value) => {
@@ -1237,8 +1237,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Color")
-                .setDesc("Choose a color for image captions e.g.: red, grey, white, black, hsl(50, 50%, 50%), rgb(50%, 75%, 100%) ")
+                .setName("颜色")
+                .setDesc("选择图片标题颜色，例如：red、grey、white、black、hsl(50, 50%, 50%)、rgb(50%, 75%, 100%)")
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionColor)
                         .onChange(async (value) => {
@@ -1249,11 +1249,11 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Font style")
-                .setDesc("Set the font style (e.g., italic, normal).")
+                .setName("字体样式")
+                .setDesc("设置字体样式（例如 italic、normal）。")
                 .addDropdown(dropdown =>
                     dropdown.addOptions({
-                        "italic": "Italic", "normal": "Normal"
+                        "italic": "斜体", "normal": "正常"
                     })
                         .setValue(this.plugin.settings.captionFontStyle)
                         .onChange(async (value) => {
@@ -1264,8 +1264,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Background color")
-                .setDesc("Choose a background color for image captions (e.g.: transparent, #f5f5f5, rgba(255,255,255,0.8))")
+                .setName("背景颜色")
+                .setDesc("选择图片标题背景颜色（例如：transparent、#f5f5f5、rgba(255,255,255,0.8)）")
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionBackgroundColor)
                         .onChange(async (value) => {
@@ -1277,8 +1277,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             // In renderImageCaptionSettingsSection
             new Setting(imageCaptionSection)
-                .setName("Border")
-                .setDesc("Set border style (e.g., 1px solid gray)")
+                .setName("边框")
+                .setDesc("设置边框样式（例如 1px solid gray）")
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionBorder)
                         .onChange(async (value) => {
@@ -1288,8 +1288,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                         })
                 );
             new Setting(imageCaptionSection)
-                .setName("Border corner radius")
-                .setDesc("Set border radius for caption (e.g., make it slightly rounded: 4px)")
+                .setName("边框圆角")
+                .setDesc("设置标题边框圆角（例如轻微圆角：4px）")
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionBorderRadius)
                         .onChange(async (value) => {
@@ -1300,8 +1300,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Space at the top")
-                .setDesc("Set space between image and caption (e.g., 4px, 8px)")
+                .setName("顶部间距")
+                .setDesc("设置图片和标题之间的间距（例如 4px、8px）")
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionMarginTop)
                         .onChange(async (value) => {
@@ -1312,8 +1312,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Padding")
-                .setDesc("Set padding around caption (e.g., 4px 8px)")
+                .setName("内边距")
+                .setDesc("设置标题内边距（例如 4px 8px）")
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionPadding)
                         .onChange(async (value) => {
@@ -1325,8 +1325,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             // Skip Caption Extensions
             new Setting(imageCaptionSection)
-                .setName("Skip caption extensions")
-                .setDesc("Comma-separated list of image extensions to exclude from captions (e.g., PNG, JPG).")
+                .setName("跳过标题的扩展名")
+                .setDesc("逗号分隔的图片扩展名列表，排除这些格式的标题（例如 PNG、JPG）。")
                 .addText((text) => {
                     text.setValue(this.plugin.settings.skipCaptionExtensions)
                         .onChange(async (value) => {
@@ -1349,11 +1349,11 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // Only add tabs if they haven't been already
         if (tabContainer.children.length === 0) {
             // Correct the type of the first argument
-            this.createTab("folder", "folder", "Folder");
-            this.createTab("filename", "pencil", "Filename");
-            this.createTab("conversion", "settings", "Conversion");
-            this.createTab("linkformat", "link", "Link format");
-            this.createTab("resize", "frame", "Resize");
+            this.createTab("folder", "folder", "文件夹");
+            this.createTab("filename", "pencil", "文件名");
+            this.createTab("conversion", "settings", "转换");
+            this.createTab("linkformat", "link", "链接格式");
+            this.createTab("resize", "frame", "调整大小");
         }
 
         // Highlight active tab 
@@ -1528,15 +1528,15 @@ export class ImageConverterSettingTab extends PluginSettingTab {
     getPresetGroupDescription(activePresetSetting: ActivePresetSetting): string {
         switch (activePresetSetting) {
             case "selectedFolderPreset":
-                return "Define where converted images will be stored. Choose from predefined locations or create custom paths using variables.";
+                return "定义转换后的图片存储位置。从预定义位置中选择，或使用变量创建自定义路径。";
             case "selectedFilenamePreset":
-                return "Control how converted images are named. Use variables like {notename}, {timestamp}, {uuid}, or {MD5:filename} to create unique filenames.";
+                return "控制转换后的图片命名方式。使用 {notename}、{timestamp}、{uuid} 或 {MD5:filename} 等变量创建唯一的文件名。";
             case "selectedConversionPreset":
-                return "Control the output format, quality, and resizing options for converted images. This allows to significantly reduce file size and keep vault size small.";
+                return "控制转换后图片的输出格式、质量和调整大小选项。这可以显著减小文件大小，保持仓库体积小巧。";
             case "selectedLinkFormatPreset":
-                return "Determine how image links are inserted into notes. Choose between Wikilinks and Markdown links, and specify how the file path should be formatted. This allows to use a different link style for images than your vault's default, offering better cross-compatibility with other applications.";
+                return "确定图片链接如何插入笔记中。在 Wikilink 和 Markdown 链接之间选择，并指定文件路径的格式。这允许使用与仓库默认不同的链接样式，提供更好的跨应用兼容性。";
             case "selectedResizePreset":
-                return "Configure non-destructive resizing options for images directly within the editor. This allows to adjust the display size without altering the original file.";
+                return "配置编辑器中图片的非破坏性调整大小选项。这可以调整显示大小而不改变原始文件。";
             default:
                 return "";
         }
@@ -1620,7 +1620,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             // Edit Button
             new ButtonComponent(actionsContainer)
                 .setIcon("pencil")
-                .setTooltip("Edit")
+                .setTooltip("编辑")
                 .onClick(() => {
                     let correctActivePresetSetting = activePresetSetting;
                     if (preset.hasOwnProperty('linkFormat')) { // Check if it's a Link Format preset
@@ -1635,13 +1635,13 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             new ButtonComponent(actionsContainer)
                 .setIcon("trash")
                 .setClass("danger")
-                .setTooltip("Delete")
+                .setTooltip("删除")
                 .onClick(() => {
                     new ConfirmDialog(
                         this.app,
-                        "Confirm Delete",
-                        `Are you sure you want to delete the preset "${preset.name}"?`,
-                        "Delete",
+                        "确认删除",
+                        `确定要删除预设「${preset.name}」吗？`,
+                        "删除",
                         () => {
                             if (activePresetSetting === "selectedFolderPreset") {
                                 this.plugin.settings.folderPresets = this.plugin.settings.folderPresets.filter(
@@ -1786,7 +1786,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         // Name Input
         new Setting(formContainer)
-            .setName("Preset name")
+            .setName("预设名称")
             .addText((text) => {
                 text.setValue(preset.name).onChange((value) => {
                     preset.name = value;
@@ -1813,7 +1813,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             );
 
             // Add Skip Rename Patterns Setting for Filename Preset
-            this.addSkipPatternsSetting(formContainer, preset as FilenamePreset, 'skipRenamePatterns', 'Skip rename patterns');
+            this.addSkipPatternsSetting(formContainer, preset as FilenamePreset, 'skipRenamePatterns', '跳过重命名模式');
         } else if (activePresetSetting === "selectedLinkFormatPreset") {
             this.renderLinkFormatFormFields(formContainer, preset as LinkFormatPreset);
         } else if (activePresetSetting === "selectedResizePreset") {
@@ -1824,7 +1824,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 preset as ConversionPreset
             );
             // Add Skip Patterns Setting for Conversion Preset
-            this.addSkipPatternsSetting(formContainer, preset as ConversionPreset, 'skipConversionPatterns', 'Skip conversion patterns');
+            this.addSkipPatternsSetting(formContainer, preset as ConversionPreset, 'skipConversionPatterns', '跳过转换模式');
 
         }
 
@@ -1846,7 +1846,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         const settingWrapper = containerEl.createDiv("image-converter-custom-template-setting-wrapper");
 
         const customTemplateSetting = new Setting(settingWrapper)
-            .setName("Custom imagename")
+            .setName("自定义图片名")
             .setClass("image-converter-custom-template-setting");
 
         const inputContainer = customTemplateSetting.controlEl.createDiv("image-converter-input-button-container");
@@ -1855,7 +1855,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         let customTemplateText: TextComponent | undefined;
         customTemplateSetting.addText((text) => {
             customTemplateText = text;
-            text.setPlaceholder("e.g., {notename}-{timestamp}")
+            text.setPlaceholder("例如 {notename}-{timestamp}")
                 .setValue(preset.customTemplate || "")
                 .onChange((value) => {
             preset.customTemplate = value;
@@ -1867,12 +1867,12 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         new ButtonComponent(inputContainer)
             .setIcon("help-circle")
-            .setTooltip("Show available variables")
+            .setTooltip("显示可用变量")
             .onClick(showVariablesCallback);
 
         // Add preview area
         const previewContainer = settingWrapper.createDiv("image-converter-preview-container");
-        previewContainer.createEl('div', { text: 'Preview:', cls: 'image-converter-preview-label' }); // Use previewLabel here
+        previewContainer.createEl('div', { text: '预览：', cls: 'image-converter-preview-label' }); // Use previewLabel here
         const previewEl = previewContainer.createDiv('image-converter-preview-path');
 
         const updatePreview = async () => {
@@ -1890,7 +1890,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 previewEl.setText(processedPath);
             } catch (error) {
                 console.error('Preview generation error:', error);
-                previewEl.setText('Error generating preview');
+                previewEl.setText('预览生成出错');
             }
         };
 
@@ -1898,13 +1898,13 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         void updatePreview();
 
         new Setting(settingWrapper)
-            .setName("If an output file already exists")
-            .setDesc("Choose how to handle filename conflicts")
+            .setName("如果输出文件已存在")
+            .setDesc("选择如何处理文件名冲突")
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
-                        reuse: "Reuse existing file in vault (if any)",
-                        increment: "Add number suffix (-1, -2, etc.)",
+                        reuse: "重用库中已有的文件（如果有）",
+                        increment: "添加数字后缀（-1、-2 等）",
                     })
                     .setValue(preset.conflictResolution || "reuse")
                     .onChange((value: "reuse" | "increment") => {
@@ -1929,20 +1929,20 @@ export class ImageConverterSettingTab extends PluginSettingTab {
     ): void {
         // Options for the dropdown when creating a new preset
         const newPresetOptions = {
-            SUBFOLDER: "In subfolder under current note",
-            CUSTOM: "Custom",
+            SUBFOLDER: "当前笔记的子文件夹中",
+            CUSTOM: "自定义",
         };
 
         // Options for the dropdown when editing an existing preset (includes all options)
         const existingPresetOptions = {
-            DEFAULT: "Default (Obsidian setting)",
-            ROOT: "Root folder",
-            CURRENT: "Same folder as current note",
+            DEFAULT: "默认（Obsidian 设置）",
+            ROOT: "根文件夹",
+            CURRENT: "与当前笔记相同的文件夹",
             ...newPresetOptions, // Include the options for new presets
         };
 
         new Setting(formContainer)
-            .setName("Location")
+            .setName("位置")
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions(
@@ -1990,8 +1990,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             const wrapper = containerEl.createDiv("image-converter-subfolder-name-setting-wrapper");
 
             const subfolderNameSetting = new Setting(wrapper)
-                .setName("Subfolder name")
-                .setDesc("Enter a custom subfolder name or path.")
+                .setName("子文件夹名称")
+                .setDesc("输入自定义子文件夹名称或路径。")
                 .setClass("image-converter-subfolder-name-setting");
 
             const inputContainer = subfolderNameSetting.controlEl.createDiv("image-converter-input-button-container");
@@ -1999,7 +1999,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             let subfolderTemplateText: TextComponent | undefined;
             subfolderNameSetting.addText((text) => {
                 subfolderTemplateText = text;
-                text.setPlaceholder("e.g., {YYYY}/{MM}/{imagename}")
+                text.setPlaceholder("例如 {YYYY}/{MM}/{imagename}")
                     .setValue(this.plugin.settings.subfolderTemplate)
                     .onChange(async (value) => {
                         this.plugin.settings.subfolderTemplate = value;
@@ -2011,11 +2011,11 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             new ButtonComponent(inputContainer)
                 .setIcon("help-circle")
-                .setTooltip("Show available variables")
+                .setTooltip("显示可用变量")
                 .onClick(showVariablesCallback);
 
             const previewContainer = wrapper.createDiv("image-converter-preview-container");
-            previewContainer.createEl('div', { text: 'Preview:', cls: 'image-converter-preview-label' });
+            previewContainer.createEl('div', { text: '预览：', cls: 'image-converter-preview-label' });
             const previewEl = previewContainer.createDiv('image-converter-preview-path');
 
             const updatePreview = async () => {
@@ -2033,7 +2033,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     previewEl.setText(processedPath);
                 } catch (error) {
                     console.error('Preview generation error:', error);
-                    previewEl.setText('Error generating preview');
+                    previewEl.setText('预览生成出错');
                 }
             };
 
@@ -2048,8 +2048,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             const wrapper = containerEl.createDiv("image-converter-custom-path-setting-wrapper");
 
             const customPathSetting = new Setting(wrapper)
-                .setName("Custom path")
-                .setDesc("Enter a custom path.")
+                .setName("自定义路径")
+                .setDesc("输入自定义路径。")
                 .setClass("image-converter-custom-template-setting");
 
             const inputContainer = customPathSetting.controlEl.createDiv("image-converter-input-button-container");
@@ -2057,7 +2057,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             let customTemplateText: TextComponent | undefined;
             customPathSetting.addText((text) => {
                 customTemplateText = text;
-                text.setPlaceholder("e.g., {YYYY}/{MM}/{imagename}")
+                text.setPlaceholder("例如 {YYYY}/{MM}/{imagename}")
                     .setValue(preset.customTemplate || "")
                     .onChange((value) => {
                             preset.customTemplate = value;
@@ -2069,11 +2069,11 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             new ButtonComponent(inputContainer)
                 .setIcon("help-circle")
-                .setTooltip("Show available variables")
+                .setTooltip("显示可用变量")
                 .onClick(showVariablesCallback);
 
             const previewContainer = wrapper.createDiv("image-converter-preview-container");
-            previewContainer.createEl('div', { text: 'Preview:', cls: 'image-converter-preview-label' });
+            previewContainer.createEl('div', { text: '预览：', cls: 'image-converter-preview-label' });
             const previewEl = previewContainer.createDiv('image-converter-preview-path');
 
             const updatePreview = async () => {
@@ -2091,7 +2091,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     previewEl.setText(processedPath);
                 } catch (error) {
                     console.error('Preview generation error:', error);
-                    previewEl.setText('Error generating preview');
+                    previewEl.setText('预览生成出错');
                 }
             };
 
@@ -2110,17 +2110,17 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         preset: ConversionPreset
     ): void {
         const outputFormatSetting = new Setting(formContainer)
-            .setName("Output format")
+            .setName("输出格式")
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
                         WEBP: "WEBP",
                         JPEG: "JPEG",
                         PNG: "PNG",
-                        ORIGINAL: "Original (Compress)",
-                        NONE: "None (No Conversion/Compression)",
-                        PNGQUANT: "pngquant (Compression for PNG only))",
-                        AVIF: "AVIF (via ffmpeg)",
+                        ORIGINAL: "原始（压缩）",
+                        NONE: "无（不转换/压缩）",
+                        PNGQUANT: "pngquant（仅压缩 PNG）",
+                        AVIF: "AVIF（通过 ffmpeg）",
                     })
                     .setValue(preset.outputFormat)
                     .onChange((value: OutputFormat) => {
@@ -2203,7 +2203,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // Insert Quality setting after Output Format
         if (["WEBP", "JPEG", "ORIGINAL"].includes(preset.outputFormat)) {
             const newSetting = new Setting(containerEl)
-                .setName("Quality")
+                .setName("质量")
                 .setClass("image-converter-quality-setting")
                 .addSlider((slider) => {
                     slider
@@ -2223,7 +2223,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // Insert Color Depth setting after Quality (if applicable) or Output Format
         if (preset.outputFormat === "PNG") {
             const newSetting = new Setting(containerEl)
-                .setName("Color depth")
+                .setName("色彩深度")
                 .setClass("image-converter-color-depth-setting")
                 .addSlider((slider) => {
                     slider
@@ -2254,8 +2254,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // Insert PNGQUANT settings after Output Format
         if (preset.outputFormat === "PNGQUANT") {
             const executablePathSetting = new Setting(containerEl)
-                .setName("Executable path for pngquant")
-                .then((setting) => addInfoIcon(setting, "Provide full-path to the binary file. It can be inside vault or anywhere in your file system."))
+                .setName("pngquant 可执行文件路径")
+                .then((setting) => addInfoIcon(setting, "提供二进制文件的完整路径。它可以在库内或文件系统的任何位置。"))
                 .setClass("image-converter-pngquant-executable-path") // Add class for easy selection
                 .addText((text) => {
                     text.setValue(preset.pngquantExecutablePath || "")
@@ -2271,8 +2271,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             );
 
             const qualitySetting = new Setting(containerEl)
-                .setName("Quality range for pngquant")
-                .setDesc("Quality setting for pngquant (e.g., 65-80). Both min-max values must be provided.")
+                .setName("pngquant 质量范围")
+                .setDesc("pngquant 质量设置（例如 65-80）。必须提供最小-最大值。")
                 .setClass("image-converter-pngquant-quality") // Add class for easy selection
                 .addText((text) => {
                     text.setValue(preset.pngquantQuality || "")
@@ -2307,8 +2307,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             let encoderDetectionButton: ButtonComponent | undefined;
 
-            const defaultEncoderDesc = "Detect and validate working AV1 encoder by running a test encode. This ensures hardware encoders are actually available on your system.";
-            const defaultCrfDesc = "Constant rate factor for AVIF (0-63, lower is better quality). Range varies by encoder - click 'Detect encoder' to see the specific range.";
+            const defaultEncoderDesc = "通过运行测试编码来检测和验证可用的 AV1 编码器。这可确保硬件编码器在您的系统上确实可用。";
+            const defaultCrfDesc = "AVIF 的恒定速率因子（0-63，越低质量越好）。范围因编码器而异 - 点击'检测编码器'查看具体范围。";
 
             const resetEncoderUi = (encoderDetectionSetting: Setting, crfSetting: Setting, presetSetting: Setting) => {
                 encoderDetectionSetting.setDesc(defaultEncoderDesc);
@@ -2320,7 +2320,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
                 presetSetting.settingEl.show();
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Technical description
-                presetSetting.setDesc("Encoding preset (speed vs. compression).");
+                presetSetting.setDesc("编码预设（速度与压缩的平衡）。");
 
                 const dropdown = presetSetting.controlEl.querySelector('select');
                 if (dropdown) {
@@ -2338,14 +2338,14 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             const executablePathSetting = new Setting(containerEl)
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Product name
-                .setName("FFmpeg executable path")
-                .then((setting) => addInfoIcon(setting, "Provide full-path to the binary file. It can be inside vault or anywhere in your file system."))
+                .setName("FFmpeg 可执行文件路径")
+                .then((setting) => addInfoIcon(setting, "提供二进制文件的完整路径。它可以在库内或文件系统的任何位置。"))
                 .setClass("image-converter-ffmpeg-executable-path")
                 .addButton(button => {
                     button
                         .setIcon("search")
                         // eslint-disable-next-line obsidianmd/ui/sentence-case -- FFmpeg is the official brand name
-                        .setTooltip("Auto-detect FFmpeg")
+                        .setTooltip("自动检测 FFmpeg")
                         .setClass("image-converter-icon-button")
                         .onClick(async () => {
                             button.setDisabled(true);
@@ -2353,7 +2353,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                                 const detectedPath = await findFfmpegExecutablePath(this.app);
                                 if (!detectedPath) {
                                     // eslint-disable-next-line obsidianmd/ui/sentence-case
-                                    new Notice("FFmpeg not found. Try installing via: Homebrew (macOS), Chocolatey (Windows), or apt/snap (Linux). Then set the path manually.", 8000);
+                                    new Notice("未找到 FFmpeg。请尝试通过以下方式安装：Homebrew (macOS)、Chocolatey (Windows) 或 apt/snap (Linux)。然后手动设置路径。", 8000);
                                     return;
                                 }
 
@@ -2376,11 +2376,11 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
                                 textComponent?.setValue(normalizedPath);
                                 // eslint-disable-next-line obsidianmd/ui/sentence-case
-                                new Notice("FFmpeg path detected and saved.", 4000);
+                                new Notice("已检测并保存 FFmpeg 路径。", 4000);
                             } catch (error) {
                                 const message = error instanceof Error ? error.message : String(error);
                                 console.error("FFmpeg auto-detection failed:", message);
-                                new Notice(`FFmpeg auto-detection failed: ${message}`);
+                                new Notice(`FFmpeg 自动检测失败：${message}`);
                             } finally {
                                 button.setDisabled(false);
                             }
@@ -2416,22 +2416,22 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             // Add encoder detection button
             const encoderDetectionSetting = new Setting(containerEl)
-                .setName("Encoder detection")
+                .setName("编码器检测")
                 .setDesc(defaultEncoderDesc)
                 .setClass("image-converter-encoder-detection")
                 .addButton(button => {
                     encoderDetectionButton = button;
                     button
-                        .setButtonText("Detect encoder")
+                        .setButtonText("检测编码器")
                         .setCta()
                         .onClick(async () => {
                             if (!preset.ffmpegExecutablePath) {
                                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- FFmpeg is the official brand name
-                                new Notice("Please specify FFmpeg executable path first");
+                                new Notice("请先指定 FFmpeg 可执行文件路径");
                                 return;
                             }
                             
-                            button.setButtonText("Validating...");
+                            button.setButtonText("验证中...");
                             button.setDisabled(true);
                             
                             try {
@@ -2446,7 +2446,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                                 if (encoder) {
                                     const encoderInfo = ENCODER_CONFIGS[encoder];
                                     const platformHint = encoderInfo ? ` (${encoderInfo.platformHint})` : '';
-                                    new Notice(`✓ Working encoder: ${encoder}${platformHint}`, 5000);
+                                    new Notice(`✓ 可用编码器：${encoder}${platformHint}`, 5000);
                                     
                                     // Save detected encoder to preset (persists in data.json)
                                     preset.detectedEncoder = encoder;
@@ -2463,7 +2463,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                                     // Show/hide preset setting based on encoder support
                                     if (encoderInfo?.supportsPreset && encoderInfo.presetNames) {
                                         presetSetting.settingEl.show();
-                                        presetSetting.setDesc(`Encoding preset for ${encoder} (speed vs. compression).`);
+                                        presetSetting.setDesc(`${encoder} 的编码预设（速度与压缩的平衡）。`);
                                         
                                         // Update dropdown options with encoder-specific presets
                                         const dropdown = presetSetting.controlEl.querySelector('select');
@@ -2496,7 +2496,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                                             return;
                                         }
                                         const platformHint = cachedInfo ? ` (${cachedInfo.platformHint})` : '';
-                                        new Notice(`Encoder detection failed. Using cached encoder: ${cachedEncoder}${platformHint}`, 5000);
+                                        new Notice(`编码器检测失败。使用缓存的编码器：${cachedEncoder}${platformHint}`, 5000);
                                         encoderDetectionDesc(`${cachedEncoder}${platformHint}`, cachedInfo.crfMin, cachedInfo.crfMax);
                                         encoderDetectionSetting.settingEl.addClass("image-converter-encoder-detected");
                                         encoderDetectionButton?.buttonEl?.addClass("image-converter-encoder-detected");
@@ -2505,7 +2505,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
                                         if (cachedInfo.supportsPreset && cachedInfo.presetNames) {
                                             presetSetting.settingEl.show();
-                                            presetSetting.setDesc(`Encoding preset for ${cachedEncoder} (speed vs. compression).`);
+                                            presetSetting.setDesc(`${cachedEncoder} 的编码预设（速度与压缩的平衡）。`);
 
                                             const dropdown = presetSetting.controlEl.querySelector('select');
                                             if (dropdown) {
@@ -2529,16 +2529,16 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                                     }
 
                                     // eslint-disable-next-line obsidianmd/ui/sentence-case -- Technical terms: AV1, FFmpeg
-                                    new Notice("No working AV1 encoder found. Install FFmpeg with AV1 support.", 5000);
+                                    new Notice("未找到可用的 AV1 编码器。请安装支持 AV1 的 FFmpeg。", 5000);
                                     // eslint-disable-next-line obsidianmd/ui/sentence-case
-                                    encoderDetectionSetting.setDesc("No working encoder found. Install FFmpeg with libaom-av1, libsvtav1, or ensure hardware drivers are installed.");
+                                    encoderDetectionSetting.setDesc("未找到可用编码器。请安装 FFmpeg 的 libaom-av1、libsvtav1，或确保硬件驱动已安装。");
                                     resetEncoderUi(encoderDetectionSetting, crfSetting, presetSetting);
                                 }
                             } catch (error) {
                                 console.error("Encoder detection error:", error);
-                                new Notice(`Error detecting encoder: ${error instanceof Error ? error.message : String(error)}`);
+                                new Notice(`检测编码器出错：${error instanceof Error ? error.message : String(error)}`);
                             } finally {
-                                button.setButtonText("Detect encoder");
+                                button.setButtonText("检测编码器");
                                 button.setDisabled(false);
                             }
                         });
@@ -2562,9 +2562,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             const encoderDetectionDesc = (encoderLabel: string, crfMin?: number, crfMax?: number) => {
                 encoderDetectionSetting.setDesc(
                     buildEncoderDesc(
-                        "Working encoder: ",
+                        "可用编码器：",
                         encoderLabel,
-                        `. CRF range: ${crfMin ?? "?"}-${crfMax ?? "?"}`
+                        `。CRF 范围：${crfMin ?? "?"}-${crfMax ?? "?"}`
                     )
                 );
             };
@@ -2572,9 +2572,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             const crfDesc = (encoderLabel: string, crfMin?: number, crfMax?: number) => {
                 crfSetting.setDesc(
                     buildEncoderDesc(
-                        "Constant rate factor for ",
+                        "恒定速率因子，编码器：",
                         encoderLabel,
-                        ` (${crfMin ?? "?"}-${crfMax ?? "?"}, lower is better quality).`
+                        ` （${crfMin ?? "?"}-${crfMax ?? "?"}，越低质量越好）。`
                     )
                 );
             };
@@ -2583,9 +2583,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             const presetSetting = new Setting(containerEl)
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Product name
-                .setName("FFmpeg preset")
+                .setName("FFmpeg 预设")
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Technical description
-                .setDesc("Encoding preset (speed vs. compression).")
+                .setDesc("编码预设（速度与压缩的平衡）。")
                 .setClass("image-converter-ffmpeg-preset")
                 // Change this to a dropdown:
                 .addDropdown(dropdown => {
@@ -2634,7 +2634,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
                     if (encoderInfo.supportsPreset && encoderInfo.presetNames) {
                         presetSetting.settingEl.show();
-                        presetSetting.setDesc(`Encoding preset for ${encoder} (speed vs. compression).`);
+                        presetSetting.setDesc(`${encoder} 的编码预设（速度与压缩的平衡）。`);
 
                         const dropdown = presetSetting.controlEl.querySelector('select');
                         if (dropdown) {
@@ -2671,18 +2671,18 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         // Insert Resize Mode setting after the last added setting
         const resizeSetting = new Setting(containerEl)
-            .setName("Resize mode")
+            .setName("调整大小模式")
             .setClass("image-converter-resize-mode-setting")
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
-                        None: "None",
-                        Fit: "Fit",
-                        Fill: "Fill",
-                        LongestEdge: "Longest Edge",
-                        ShortestEdge: "Shortest Edge",
-                        Width: "Width",
-                        Height: "Height",
+                        None: "无",
+                        Fit: "适应",
+                        Fill: "填充",
+                        LongestEdge: "最长边",
+                        ShortestEdge: "最短边",
+                        Width: "宽度",
+                        Height: "高度",
                     })
                     .setValue(preset.resizeMode)
                     .onChange((value: ResizeMode) => {
@@ -2706,7 +2706,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         if (["Fit", "Fill", "Width"].includes(preset.resizeMode)) {
             const newSetting = new Setting(containerEl)
-                .setName("Desired width")
+                .setName("目标宽度")
                 .setClass("image-converter-desired-width-setting")
                 .addText((text) => {
                     text.setValue(preset.desiredWidth.toString()).onChange(
@@ -2725,7 +2725,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         if (["Fit", "Fill", "Height"].includes(preset.resizeMode)) {
             const newSetting = new Setting(containerEl)
-                .setName("Desired height")
+                .setName("目标高度")
                 .setClass("image-converter-desired-height-setting")
                 .addText((text) => {
                     text.setValue(preset.desiredHeight.toString()).onChange(
@@ -2750,7 +2750,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             existingEdgeSetting?.remove();
 
             const newSetting = new Setting(containerEl)
-                .setName(preset.resizeMode === "LongestEdge" ? "Desired longest edge" : "Desired shortest edge") // Dynamically set the name
+                .setName(preset.resizeMode === "LongestEdge" ? "目标最长边" : "目标最短边") // Dynamically set the name
                 .setClass(preset.resizeMode === "LongestEdge" ? "image-converter-desired-longest-edge-setting" : "image-converter-desired-shortest-edge-setting") // Dynamically set the class
                 .addText((text) => {
                     text.setValue(
@@ -2769,14 +2769,14 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         if (preset.resizeMode !== "None") {
             const newSetting = new Setting(containerEl)
-                .setName("Scale mode")
+                .setName("缩放模式")
                 .setClass("image-converter-enlarge-or-reduce-setting")
                 .addDropdown((dropdown) => {
                     dropdown
                         .addOptions({
-                            Auto: "Auto",
-                            Reduce: "Only Reduce",
-                            Enlarge: "Only Enlarge",
+                            Auto: "自动",
+                            Reduce: "仅缩小",
+                            Enlarge: "仅放大",
                         })
                         .setValue(preset.enlargeOrReduce)
                         .onChange((value: EnlargeReduce) => {
@@ -2791,9 +2791,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         }
 
         const newSetting = new Setting(containerEl)
-            .setName("Revert to original if larger")
+            .setName("如果更大则恢复原图")
             .setClass("image-converter-revert-to-original")
-            .setDesc("If the processed image filesize is larger than the original, use the original image instead. Sometimes compression can increase file size, especially with certain formats or settings, but if you would prefer to always get smaller file sizes, enable this option.")
+            .setDesc("如果处理后的图片文件大小大于原始图片，则使用原始图片。有时压缩可能会增加文件大小，特别是某些格式或设置，如果您希望始终获得更小的文件大小，请启用此选项。")
             .addToggle((toggle) =>
                 toggle
                     .setValue(preset.revertToOriginalIfLarger ?? this.plugin.settings.revertToOriginalIfLarger)
@@ -2811,10 +2811,10 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         const minSavingsSetting = new Setting(containerEl)
             // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setName("Minimum compression savings (KB)")
+            .setName("最小压缩节省量 (KB)")
             .setClass("image-converter-min-savings-setting")
             // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setDesc("This option allows you to further specify, how much the file size must be reduced before compressing the image. Sometimes an image's size might shrink by only 3 KB, but the visible degradation in quality is significant. This option helps catch those cases and avoids compressing such images. Default is 30kb, which means if after compressing the image file size would reduce only by 30kb or less, then the original image bytes will be used instead. Set to 0 to always allow compression when the output is smaller.")
+            .setDesc("此选项允许您进一步指定压缩图片前文件大小必须减少多少。有时图片大小可能只缩小 3 KB，但可见的质量下降却很明显。此选项有助于捕获这些情况并避免压缩此类图片。默认值为 30KB，即如果压缩后图片文件大小仅减少 30KB 或更少，则将使用原始图片字节。设置为 0 则在输出较小时始终允许压缩。")
             .addText((text) =>
                 text
                     .setPlaceholder("30")
@@ -2851,7 +2851,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         // 1. Preset Management:
         this.renderPresetGroup(
-            "Link format presets",
+            "链接格式预设",
             this.plugin.settings.linkFormatSettings.linkFormatPresets,
             "selectedLinkFormatPreset",
             this.presetUIState.linkformat
@@ -2865,8 +2865,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
     ): void {
         // Link Format (Dropdown)
         new Setting(formContainer)
-            .setName("Link format")
-            .setDesc("Choose between wikilink and Markdown format")
+            .setName("链接格式")
+            .setDesc("在 Wikilink 和 Markdown 格式之间选择")
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
@@ -2882,14 +2882,14 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         // Path Format (Dropdown)
         new Setting(formContainer)
-            .setName("Path format")
-            .setDesc("Choose how paths should be formatted")
+            .setName("路径格式")
+            .setDesc("选择路径格式化方式")
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
-                        shortest: "Shortest",
-                        relative: "Relative",
-                        absolute: "Absolute",
+                        shortest: "最短路径",
+                        relative: "相对路径",
+                        absolute: "绝对路径",
                     })
                     .setValue(preset.pathFormat)
                     .onChange((value: PathFormat) => {
@@ -2902,7 +2902,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         const examplesSection = formContainer.createEl("details", {
             cls: "image-converter-format-examples-section"
         });
-        examplesSection.createEl("summary", { text: "Examples" }); // Use summary for details
+        examplesSection.createEl("summary", { text: "示例" }); // Use summary for details
 
         examplesSection.createEl("div", {
             cls: "image-converter-format-examples-content"
@@ -2937,26 +2937,26 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         };
 
         const formats = [
-            ["Shortest",
-                `Uses just the file name without any path:
+            ["最短路径",
+                `仅使用文件名，不包含任何路径：
              <ul>
                  <li><b>Wikilink</b>: ![[image.jpg]]</li>
                  <li><b>Markdown</b>: ![](image.jpg)</li>
              </ul>`,
                 buildExample("shortest")],
 
-            ["Relative",
-                `Uses the path relative to the current note:
+            ["相对路径",
+                `使用相对于当前笔记的路径：
              <ul>
-                 <li>Same folder: starts with <code>./</code> (e.g., <code>./image.jpg</code>)</li>
-                 <li>Parent folder: starts with <code>../</code> (e.g., <code>../image.jpg</code>)</li>
-                 <li>Subfolder: includes folder path (e.g., <code>./subfolder/image.jpg</code>)</li>
+                 <li>同一文件夹：以 <code>./</code> 开头（例如 <code>./image.jpg</code>）</li>
+                 <li>上级文件夹：以 <code>../</code> 开头（例如 <code>../image.jpg</code>）</li>
+                 <li>子文件夹：包含文件夹路径（例如 <code>./subfolder/image.jpg</code>）</li>
              </ul>`,
                 buildExample("relative")],
 
-            ["Absolute",
-                `Uses the complete path from your vault root, always starting with <code>/</code>. 
-             This ensures the link works from any note in your vault, regardless of its location.`,
+            ["绝对路径",
+                `使用从库根目录开始的完整路径，始终以 <code>/</code> 开头。
+             这确保链接在库中的任何笔记中都有效，无论其位置如何。`,
                 buildExample("absolute")]
         ];
 
@@ -2972,15 +2972,15 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         const scenario = content.createEl("div", { cls: "image-converter-format-scenario" });
         const paths = scenario.createEl("div", { cls: "image-converter-format-paths" });
         // eslint-disable-next-line obsidianmd/ui/sentence-case -- Example label with emoji
-        paths.createEl("div", { cls: "image-converter-path-label" }).setText("📄 Note location:");
+        paths.createEl("div", { cls: "image-converter-path-label" }).setText("📄 笔记位置：");
         paths.createEl("div", { cls: "image-converter-path-value" }).setText("/Folder/Subfolder1/note.md");
         // eslint-disable-next-line obsidianmd/ui/sentence-case -- Example label with emoji
-        paths.createEl("div", { cls: "image-converter-path-label" }).setText("🖼️ Image location:");
+        paths.createEl("div", { cls: "image-converter-path-label" }).setText("🖼️ 图片位置：");
         paths.createEl("div", { cls: "image-converter-path-value" }).setText("/Folder/Subfolder2/image.jpg");
 
         const result = scenario.createEl("div", { cls: "image-converter-format-result" });
         // eslint-disable-next-line obsidianmd/ui/sentence-case -- Example label with arrow
-        result.createEl("div", { cls: "image-converter-result-label" }).setText("→ Path becomes:");
+        result.createEl("div", { cls: "image-converter-result-label" }).setText("→ 路径变为：");
         const resultValue = result.createEl("div", { cls: "image-converter-result-value" });
 
         const updateResult = () => {
@@ -2999,13 +2999,13 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             };
 
             if (linkFormat === "wikilink") {
-                addRow("Shortest:", "![[Bäume.jpg]]");
-                addRow("Relative:", "![[../Subfolder2/Bäume.jpg]]");
-                addRow("Absolute:", "![[/Folder/Subfolder2/Bäume.jpg]]");
+                addRow("最短路径：", "![[Bäume.jpg]]");
+                addRow("相对路径：", "![[../Subfolder2/Bäume.jpg]]");
+                addRow("绝对路径：", "![[/Folder/Subfolder2/Bäume.jpg]]");
             } else {
-                addRow("Shortest:", "![](Bäume.jpg)");
-                addRow("Relative:", "![](../Subfolder2/Bäume.jpg)");
-                addRow("Absolute:", "![](/Folder/Subfolder2/Bäume.jpg)");
+                addRow("最短路径：", "![](Bäume.jpg)");
+                addRow("相对路径：", "![](../Subfolder2/Bäume.jpg)");
+                addRow("绝对路径：", "![](/Folder/Subfolder2/Bäume.jpg)");
             }
         };
 
@@ -3049,7 +3049,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         });
         card.createEl("div", {
             // eslint-disable-next-line obsidianmd/ui/sentence-case -- Action button text
-            text: "+ Add new",
+            text: "+ 新增",
             cls: "image-converter-add-new-preset-text",
         });
 
@@ -3122,41 +3122,41 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         const addExample = async (template: string) => {
             const exampleEl = fragment.createEl("p", { cls: "image-converter-summary-example" });
-            exampleEl.textContent = "Example: loading..."; // Placeholder
+            exampleEl.textContent = "示例: 加载中..."; // Placeholder
 
             try {
                 const ctx = this.getPreviewContext();
                 const processedPath = await this.plugin.variableProcessor.processTemplate(template, ctx);
-                exampleEl.textContent = `Example: ${processedPath}`;
+                exampleEl.textContent = `示例: ${processedPath}`;
             } catch (error) {
                 console.error('Preview generation error:', error);
-            exampleEl.textContent = 'Example: error generating preview';
+            exampleEl.textContent = '示例: 生成预览时出错';
             }
         };
 
         switch (preset.type) {
             case "DEFAULT":
-                addLine("Default (Using Obsidian's configured setting for attachments)");
+                addLine("默认（使用 Obsidian 配置的附件设置）");
                 void addExample("Assets/{notename}/{imagename}");
                 break;
             case "ROOT":
-                addLine("Root folder of the vault (Top-level folder).");
+                addLine("仓库根目录（顶层文件夹）。");
                 void addExample("{imagename}");
                 break;
             case "CURRENT":
-                addLine("Same folder as the note you're currently editing.");
+                addLine("与当前编辑的笔记相同的文件夹。");
                 void addExample("{notepath}/{imagename}");
                 break;
             case "SUBFOLDER":
-                addLine(`In subfolder: ${this.plugin.settings.subfolderTemplate}`);
+                addLine(`子文件夹: ${this.plugin.settings.subfolderTemplate}`);
                 void addExample(this.plugin.settings.subfolderTemplate);
                 break;
             case "CUSTOM":
-                addLine(`Custom location: ${preset.customTemplate}`);
+                addLine(`自定义位置: ${preset.customTemplate}`);
                 void addExample(preset.customTemplate || "");
                 break;
             default:
-                addLine("Unknown location");
+                addLine("未知位置");
                 break;
         }
 
@@ -3175,26 +3175,26 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         const addExample = async (template: string) => {
             const exampleEl = fragment.createEl("p", { cls: "image-converter-summary-example" });
-            exampleEl.textContent = "Example: loading..."; // Placeholder
+            exampleEl.textContent = "示例: 加载中..."; // Placeholder
 
             try {
                 const ctx = this.getPreviewContext();
                 const processedPath = await this.plugin.variableProcessor.processTemplate(template, ctx);
-                exampleEl.textContent = `Example: ${processedPath}`;
+                exampleEl.textContent = `示例: ${processedPath}`;
             } catch (error) {
                 console.error('Preview generation error:', error);
-                exampleEl.textContent = 'Example: error generating preview';
+                exampleEl.textContent = '示例: 生成预览时出错';
             }
         };
 
-        addLine(`Template: ${preset.customTemplate || "{imagename}"}`);
+        addLine(`模板: ${preset.customTemplate || "{imagename}"}`);
         void addExample(preset.customTemplate || "{imagename}");
 
         if (preset.skipRenamePatterns) {
-            addLine(`Skip rename patterns: ${preset.skipRenamePatterns}`);
+            addLine(`跳过重命名模式: ${preset.skipRenamePatterns}`);
         }
         if (preset.conflictResolution) {
-            addLine(`If an output file already exists: ${preset.conflictResolution}`);
+            addLine(`如果输出文件已存在: ${preset.conflictResolution}`);
         }
 
         containerEl.appendChild(fragment);
@@ -3203,7 +3203,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
 
     getLinkFormatPresetSummary(preset: LinkFormatPreset): string {
-        return `Link Type: ${preset.linkFormat}, Path Type: ${preset.pathFormat}`;
+        return `链接类型: ${preset.linkFormat}, 路径类型: ${preset.pathFormat}`;
     }
 
     getConversionPresetSummary(preset: ConversionPreset): DocumentFragment {
@@ -3213,22 +3213,22 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             fragment.createEl("p", { text });
         };
 
-        addLine(`Format: ${preset.outputFormat}`);
+        addLine(`格式: ${preset.outputFormat}`);
 
         if (preset.outputFormat !== "NONE") {
             // Only show quality for formats that use it (not AVIF - it uses CRF instead)
             if (preset.outputFormat !== "AVIF") {
-                addLine(`Quality: ${preset.quality}`);
+                addLine(`质量: ${preset.quality}`);
             }
             if (preset.outputFormat === "PNG") {
-                addLine(`Color Depth: ${preset.colorDepth}`);
+                addLine(`色深: ${preset.colorDepth}`);
             }
             if (preset.outputFormat === "AVIF") {
                 addLine(`FFmpeg CRF: ${preset.ffmpegCrf}`);
-                addLine(`FFmpeg Preset: ${preset.ffmpegPreset}`);
+                addLine(`FFmpeg 预设: ${preset.ffmpegPreset}`);
             }
 
-            addLine(`Resize: ${preset.resizeMode}`);
+            addLine(`调整大小: ${preset.resizeMode}`);
 
             switch (preset.resizeMode) {
                 case "Fit":
@@ -3236,35 +3236,35 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     addLine(`(${preset.desiredWidth}x${preset.desiredHeight})`);
                     break;
                 case "Width":
-                    addLine(`(Width: ${preset.desiredWidth})`);
+                    addLine(`(宽度: ${preset.desiredWidth})`);
                     break;
                 case "Height":
-                    addLine(`(Height: ${preset.desiredHeight})`);
+                    addLine(`(高度: ${preset.desiredHeight})`);
                     break;
                 case "LongestEdge":
-                    addLine(`(Longest Edge: ${preset.desiredLongestEdge})`);
+                    addLine(`(最长边: ${preset.desiredLongestEdge})`);
                     break;
                 case "ShortestEdge":
-                    addLine(`(Shortest Edge: ${preset.desiredLongestEdge})`);
+                    addLine(`(最短边: ${preset.desiredLongestEdge})`);
                     break;
                 default: // "None"
                     break;
             }
 
             if (preset.resizeMode !== "None") {
-                addLine(`Enlarge/Reduce: ${preset.enlargeOrReduce}`);
+                addLine(`放大/缩小: ${preset.enlargeOrReduce}`);
             }
 
-            addLine(`Allow Larger Files: ${preset.allowLargerFiles ? "Yes" : "No"}`);
+            addLine(`允许更大的文件: ${preset.allowLargerFiles ? "是" : "否"}`);
         }
 
         if (preset.skipConversionPatterns) {
-            addLine(`Skip Patterns: ${preset.skipConversionPatterns}`);
+            addLine(`跳过模式: ${preset.skipConversionPatterns}`);
         }
         if (preset.revertToOriginalIfLarger) {
-            addLine("Revert to original if larger: Yes");
+            addLine("如果更大则恢复原图: 是");
             if (preset.minimumCompressionSavingsInKB !== undefined) {
-                addLine(`Minimum compression savings (KB): ${preset.minimumCompressionSavingsInKB}`);
+                addLine(`最小压缩节省量 (KB): ${preset.minimumCompressionSavingsInKB}`);
             }
         }
 
@@ -3280,29 +3280,29 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         new Setting(containerEl)
             .setName(title)
             .setDesc(
-                "Comma-separated list of patterns to skip (glob or regex). Regex patterns must be enclosed in `/` or `r/` or `regex:` E.g. do not process images which include word CAT in them /CAT/"
+                "逗号分隔的跳过模式列表（glob 或正则表达式）。正则表达式模式必须用 `/` 或 `r/` 或 `regex:` 包围。例如，不处理名称中包含 CAT 的图片：/CAT/"
             )
             .setTooltip(
-                "Supports multiple pattern types:\n\n" +
-                "1. Glob patterns:\n" +
+                "支持多种模式类型：\n\n" +
+                "1. Glob 模式：\n" +
                 "   *.png, draft-*, test-?.jpg\n" +
-                "   * = any characters\n" +
-                "   ? = single character\n\n" +
-                "2. Regular expressions:\n" +
-                "   /pattern/ or r/pattern/ or regex:pattern\n\n" +
-                "Examples:\n" +
-                " *.png (all PNG files)\n" +
-                " draft-* (files starting with draft-)\n" +
-                " /^IMG_\\d{4}\\./ (IMG_ followed by 4 digits)\n" +
-                " r/\\.(jpe?g|png)$/ (files ending in .jpg/.jpeg/.png)\n" +
-                " regex:^(draft|temp)- (files starting with draft- or temp-)"
+                "   * = 任意字符\n" +
+                "   ? = 单个字符\n\n" +
+                "2. 正则表达式：\n" +
+                "   /pattern/ 或 r/pattern/ 或 regex:pattern\n\n" +
+                "示例：\n" +
+                " *.png（所有 PNG 文件）\n" +
+                " draft-*（以 draft- 开头的文件）\n" +
+                " /^IMG_\\d{4}\\./ （IMG_ 后跟 4 位数字）\n" +
+                " r/\\.(jpe?g|png)$/（以 .jpg/.jpeg/.png 结尾的文件）\n" +
+                " regex:^(draft|temp)-（以 draft- 或 temp- 开头的文件）"
             )
             .addTextArea((text) => {
                 const value = property === 'skipConversionPatterns'
                     ? (preset as ConversionPreset).skipConversionPatterns
                     : (preset as FilenamePreset).skipRenamePatterns;
                 text
-                    .setPlaceholder("e.g., *.png, draft-*, /^IMG_\\d{4}\\./)")
+                    .setPlaceholder("例如 *.png, draft-*, /^IMG_\\d{4}\\./)")
                     .setValue(value)
                     .onChange(async (newValue) => {
                         const trimmedValue = newValue.trim() ? newValue : "";
@@ -3333,57 +3333,57 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         const shortestEdgeValue = `${preset.shortestEdge}${preset.resizeUnits === "percentage" ? "%" : "px"}`;
         const editorMaxWidthValue = `${preset.editorMaxWidthValue}${preset.resizeUnits === "percentage" ? "%" : "px"}`;
         const scaleModeValue = preset.resizeScaleMode;
-        const respectEditorMaxWidthValue = preset.respectEditorMaxWidth ? "Yes" : "No";
-        const maintainAspectRatioValue = preset.maintainAspectRatio ? "Yes" : "No";
+        const respectEditorMaxWidthValue = preset.respectEditorMaxWidth ? "是" : "否";
+        const maintainAspectRatioValue = preset.maintainAspectRatio ? "是" : "否";
 
         switch (preset.resizeDimension) {
             case "none":
-                addLine("No resizing");
+                addLine("不调整大小");
                 break;
             case "width":
-                addLine(`Width: ${widthValue}`);
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
-                addLine(`Maintain Aspect Ratio: ${maintainAspectRatioValue}`);
+                addLine(`宽度: ${widthValue}`);
+                addLine(`缩放模式: ${scaleModeValue}`);
+                addLine(`遵循编辑器最大宽度: ${respectEditorMaxWidthValue}`);
+                addLine(`保持宽高比: ${maintainAspectRatioValue}`);
                 break;
             case "height":
-                addLine(`Height: ${heightValue}`);
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
-                addLine(`Maintain Aspect Ratio: ${maintainAspectRatioValue}`);
+                addLine(`高度: ${heightValue}`);
+                addLine(`缩放模式: ${scaleModeValue}`);
+                addLine(`遵循编辑器最大宽度: ${respectEditorMaxWidthValue}`);
+                addLine(`保持宽高比: ${maintainAspectRatioValue}`);
                 break;
             case "both":
-                addLine(`Custom: ${customValue}`);
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
-                addLine(`Maintain Aspect Ratio: ${maintainAspectRatioValue}`);
+                addLine(`自定义: ${customValue}`);
+                addLine(`缩放模式: ${scaleModeValue}`);
+                addLine(`遵循编辑器最大宽度: ${respectEditorMaxWidthValue}`);
+                addLine(`保持宽高比: ${maintainAspectRatioValue}`);
                 break;
             case "longest-edge":
-                addLine(`Longest Edge: ${longestEdgeValue}`);
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
-                addLine(`Maintain Aspect Ratio: ${maintainAspectRatioValue}`);
+                addLine(`最长边: ${longestEdgeValue}`);
+                addLine(`缩放模式: ${scaleModeValue}`);
+                addLine(`遵循编辑器最大宽度: ${respectEditorMaxWidthValue}`);
+                addLine(`保持宽高比: ${maintainAspectRatioValue}`);
                 break;
             case "shortest-edge":
-                addLine(`Shortest Edge: ${shortestEdgeValue}`);
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
-                addLine(`Maintain Aspect Ratio: ${maintainAspectRatioValue}`);
+                addLine(`最短边: ${shortestEdgeValue}`);
+                addLine(`缩放模式: ${scaleModeValue}`);
+                addLine(`遵循编辑器最大宽度: ${respectEditorMaxWidthValue}`);
+                addLine(`保持宽高比: ${maintainAspectRatioValue}`);
                 break;
             case "original-width":
-                addLine("Original Width");
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
+                addLine("原始宽度");
+                addLine(`缩放模式: ${scaleModeValue}`);
+                addLine(`遵循编辑器最大宽度: ${respectEditorMaxWidthValue}`);
                 break;
             case "original-height":
-                addLine("Original Height");
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
+                addLine("原始高度");
+                addLine(`缩放模式: ${scaleModeValue}`);
+                addLine(`遵循编辑器最大宽度: ${respectEditorMaxWidthValue}`);
                 break;
             case "editor-max-width":
-                addLine(`Editor Max Width: ${editorMaxWidthValue}`);
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
+                addLine(`编辑器最大宽度: ${editorMaxWidthValue}`);
+                addLine(`缩放模式: ${scaleModeValue}`);
+                addLine(`遵循编辑器最大宽度: ${respectEditorMaxWidthValue}`);
                 break;
         }
 
@@ -3393,20 +3393,20 @@ export class ImageConverterSettingTab extends PluginSettingTab {
     renderResizePresetFormFields(formContainer: HTMLElement, preset: NonDestructiveResizePreset): void {
         // Resize Dimension (Dropdown)
         new Setting(formContainer)
-            .setName("Resize dimension")
-            .setDesc("Choose how to resize the image")
+            .setName("调整尺寸维度")
+            .setDesc("选择如何调整图片大小")
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
-                        "none": "None",
-                        "width": "Width",
-                        "height": "Height",
-                        "both": "WidthxHeight (Custom)",
-                        ["longest-edge"]: "Longest edge",
-                        ["shortest-edge"]: "Shortest edge",
-                        ["original-width"]: "Apply original image width",
-                        ["original-height"]: "Apply original image height",
-                        ["editor-max-width"]: "Fit editor max-width"
+                        "none": "无",
+                        "width": "宽度",
+                        "height": "高度",
+                        "both": "宽x高（自定义）",
+                        ["longest-edge"]: "最长边",
+                        ["shortest-edge"]: "最短边",
+                        ["original-width"]: "应用原始图片宽度",
+                        ["original-height"]: "应用原始图片高度",
+                        ["editor-max-width"]: "适应编辑器最大宽度"
                     })
                     .setValue(preset.resizeDimension)
                     .onChange((value: ResizeDimension) => {
@@ -3505,7 +3505,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     },
                     true // Add units dropdown
                 )
-                    .setDesc("Set new custom width"); // Add description here
+                    .setDesc("设置新的自定义宽度"); // Add description here
                 break;
             case "height":
                 addInputSetting(
@@ -3520,7 +3520,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     },
                     true // Add units dropdown
                 )
-                    .setDesc("Set new custom height"); // Add description here
+                    .setDesc("设置新的自定义高度"); // Add description here
                 break;
             case "longest-edge":
                 addInputSetting(
@@ -3535,7 +3535,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     },
                     true // Add units dropdown
                 )
-                    .setDesc("Plugin automatically reads the original image dimensions and applies the provided value to the longer of the width or height. The other dimension is then calculated automatically if 'maintain aspect ratio' is enabled."); // Add description here
+                    .setDesc("插件自动读取原始图片尺寸，将提供的值应用于宽度或高度中较长的一边。如果启用了'保持宽高比'，则另一个尺寸会自动计算。"); // Add description here
                 break;
             case "shortest-edge":
                 addInputSetting(
@@ -3550,11 +3550,11 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     },
                     true // Add units dropdown
                 )
-                    .setDesc("Plugin automatically reads the original image dimensions and applies the provided value to the shorter of the width or height. The other dimension is then calculated automatically if 'maintain aspect ratio' is enabled."); // Add description here
+                    .setDesc("插件自动读取原始图片尺寸，将提供的值应用于宽度或高度中较短的一边。如果启用了'保持宽高比'，则另一个尺寸会自动计算。"); // Add description here
                 break;
             case "both":
                 customValueSetting = new Setting(formContainer)
-                    .setName("Custom value")
+                    .setName("自定义值")
                     .setClass("image-converter-resize-custom-setting")
                     .addText((text) => {
                         text.setValue(preset.customValue || "")
@@ -3572,7 +3572,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                                     preset.customValue = value;
                                 } else {
                                     new Notice(
-                                        "Invalid custom value format. Use |widthxheight or percentage format (e.g., 50x75%)."
+                                        "自定义值格式无效。请使用 |宽x高 或百分比格式（例如 50x75%）。"
                                     );
                                 }
                             });
@@ -3583,7 +3583,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                                 : "widthxheight"
                         );
                     })
-                    .setDesc("Set both width and height using the format |widthxheight (e.g., 300x200) or percentage format (e.g., 50x75). This does not preserve aspect ratio.");
+                    .setDesc("使用 |宽x高 格式同时设置宽度和高度（例如 300x200）或百分比格式（例如 50x75）。不保持宽高比。");
                 if (buttonContainer) {
                     formContainer.insertBefore(
                         customValueSetting.settingEl,
@@ -3593,7 +3593,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 break;
             case "editor-max-width":
                 editorMaxWidthValueSetting = new Setting(formContainer)
-                    .setName("Max width value")
+                    .setName("最大宽度值")
                     .setClass(
                         "image-converter-resize-editor-max-width-value-setting"
                     )
@@ -3634,7 +3634,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                             "image-converter-resize-units-dropdown"
                         );
                     })
-                    .setDesc("Set the maximum width of the image to fit within the editor's width. You can specify a percentage or a fixed pixel value.");
+                    .setDesc("设置图片的最大宽度以适应编辑器宽度。可以指定百分比或固定像素值。");
                 if (buttonContainer) {
                     formContainer.insertBefore(
                         editorMaxWidthValueSetting.settingEl,
@@ -3651,10 +3651,10 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             preset.resizeDimension !== "both"
         ) {
             aspectToggle = new Setting(formContainer)
-                .setName("Maintain aspect ratio")
+                .setName("保持宽高比")
                 .setClass("image-converter-maintain-aspect-ratio-setting")
                 .setDesc(
-                    "Preserve the image's original proportions when resizing."
+                    "调整大小时保持图片的原始比例。"
                 )
                 .addToggle((toggle) => {
                     toggle
@@ -3696,18 +3696,18 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             preset.resizeDimension !== "editor-max-width"
         ) {
             const scaleModeSetting = new Setting(formContainer)
-                .setName("Scale mode")
+                .setName("缩放模式")
                 .setClass("image-converter-resize-scale-mode-setting")
                 .setDesc(
                     // eslint-disable-next-line obsidianmd/ui/sentence-case -- Technical description with list
-                    "Controls how images are adjusted relative to target size:\n- Auto: adjusts image to fit specified dimensions\n- Reduce only: only shrinks images larger than target\n- Enlarge only: only enlarges images smaller than target"
+                    "控制图片相对于目标尺寸的调整方式：\n- 自动：调整图片以适应指定尺寸\n- 仅缩小：仅缩小大于目标的图片\n- 仅放大：仅放大小于目标的图片"
                 )
                 .addDropdown((dropdown) => {
                     dropdown
                         .addOptions({
-                            auto: "Auto",
-                            reduce: "Reduce Only",
-                            enlarge: "Enlarge Only",
+                            auto: "自动",
+                            reduce: "仅缩小",
+                            enlarge: "仅放大",
                         })
                         .setValue(preset.resizeScaleMode)
                         .onChange((value: ResizeScaleMode) => {
@@ -3726,10 +3726,10 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // Respect Editor Max Width Toggle (not applicable for "editor-max-width")
         if (preset.resizeDimension !== "editor-max-width" && preset.resizeDimension !== "none") {
             const respectWidthToggle = new Setting(formContainer)
-                .setName("Respect editor max width")
+                .setName("遵循编辑器最大宽度")
                 .setClass("image-converter-resize-respect-width-setting")
                 .setDesc(
-                    "When calculating dimensions, prevent the image from exceeding the editor's width."
+                    "计算尺寸时，防止图片超过编辑器的宽度。"
                 )
                 .addToggle((toggle) => {
                     toggle
@@ -3780,11 +3780,11 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         uiState: PresetCategoryUIState<T>
     ): void {
         new ButtonComponent(buttonContainer)
-            .setButtonText(isNew ? "Add" : "Save")
+            .setButtonText(isNew ? "添加" : "保存")
             .setCta()
             .onClick(async () => {
                 if (!preset.name) {
-                    new Notice("Preset name cannot be empty.");
+                    new Notice("预设名称不能为空。");
                     return;
                 }
 
@@ -3814,7 +3814,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                             ))
                     )
                 ) {
-                    new Notice("A preset with this name already exists.");
+                    new Notice("已存在同名预设。");
                     return;
                 }
 
@@ -3851,7 +3851,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         isNew: boolean
     ): void {
         new ButtonComponent(buttonContainer)
-            .setButtonText("Cancel")
+            .setButtonText("取消")
             .onClick(() => {
                 uiState.editingPreset = null;
                 uiState.newPreset = null;
@@ -3929,7 +3929,7 @@ export class ConfirmDialog extends Modal {
 
         // Add a Cancel button
         new ButtonComponent(buttonContainer)
-            .setButtonText("Cancel")
+            .setButtonText("取消")
             .onClick(() => this.close());
 
         // Add a Confirm button with danger styling
@@ -3961,13 +3961,13 @@ export class SaveGlobalPresetModal extends Modal {
 
     onOpen() {
         const { contentEl } = this;
-        contentEl.createEl("h2", { text: "Save global preset" });
+        contentEl.createEl("h2", { text: "保存全局预设" });
 
         // Preset Name Input
         new Setting(contentEl)
-            .setName("Preset name")
+            .setName("预设名称")
             .addText((text) => {
-                text.setPlaceholder("Enter preset name")
+                text.setPlaceholder("输入预设名称")
                     .setValue(this.presetName)
                     .onChange((value) => {
                         this.presetName = value;
@@ -3982,20 +3982,20 @@ export class SaveGlobalPresetModal extends Modal {
         new Setting(contentEl)
             .addButton((btn) =>
                 btn
-                    .setButtonText("Save")
+                    .setButtonText("保存")
                     .setCta()
                     .onClick(() => {
                         if (this.presetName) {
                             this.callback(this.presetName);
                             this.close();
                         } else {
-                            new Notice("Please enter a preset name.");
+                            new Notice("请输入预设名称。");
                         }
                     })
             )
             .addButton((btn) =>
                 btn
-                    .setButtonText("Cancel")
+                    .setButtonText("取消")
                     .onClick(() => {
                         this.close();
                     })
@@ -4005,7 +4005,7 @@ export class SaveGlobalPresetModal extends Modal {
 
     updateSummary(summaryEl: HTMLElement) {
         summaryEl.empty();
-        summaryEl.createEl("h4", { text: "Summary" });
+        summaryEl.createEl("h4", { text: "摘要" });
 
         const folderPreset = this.plugin.settings.folderPresets.find(
             (presetItem) => presetItem.name === this.plugin.settings.selectedFolderPreset
@@ -4051,107 +4051,107 @@ export class SaveGlobalPresetModal extends Modal {
             if (preset) {
                 const sectionEl = document.createElement("div");
                 sectionEl.classList.add("summary-section");
-                sectionEl.appendChild(createSectionTitle(`${presetType} Preset: ${preset.name}`));
+                sectionEl.appendChild(createSectionTitle(`${presetType}预设: ${preset.name}`));
 
                 switch (presetType) {
-                    case "Folder": {
+                    case "文件夹": {
                         const folderP = preset as FolderPreset;
-                        sectionEl.appendChild(createSummaryItem("Type", folderP.type));
+                        sectionEl.appendChild(createSummaryItem("类型", folderP.type));
                         if (folderP.type === "SUBFOLDER") {
-                            sectionEl.appendChild(createSummaryItem("Subfolder template", this.plugin.settings.subfolderTemplate));
+                            sectionEl.appendChild(createSummaryItem("子文件夹模板", this.plugin.settings.subfolderTemplate));
                         } else if (folderP.type === "CUSTOM") {
-                            sectionEl.appendChild(createSummaryItem("Custom template", folderP.customTemplate));
+                            sectionEl.appendChild(createSummaryItem("自定义模板", folderP.customTemplate));
                         }
                         break;
                     }
-                    case "Filename": {
+                    case "文件名": {
                         const filenameP = preset as FilenamePreset;
-                        sectionEl.appendChild(createSummaryItem("Template", filenameP.customTemplate));
+                        sectionEl.appendChild(createSummaryItem("模板", filenameP.customTemplate));
                         break;
                     }
-                    case "Conversion": {
+                    case "转换": {
                         const conversionP = preset as ConversionPreset;
-                        sectionEl.appendChild(createSummaryItem("Output format", conversionP.outputFormat));
+                        sectionEl.appendChild(createSummaryItem("输出格式", conversionP.outputFormat));
                         if (conversionP.outputFormat !== "NONE") {
-                            sectionEl.appendChild(createSummaryItem("Quality", conversionP.quality));
+                            sectionEl.appendChild(createSummaryItem("质量", conversionP.quality));
                             if (conversionP.outputFormat === "PNG") {
-                                sectionEl.appendChild(createSummaryItem("Color depth", conversionP.colorDepth));
+                                sectionEl.appendChild(createSummaryItem("色彩深度", conversionP.colorDepth));
                             }
-                            sectionEl.appendChild(createSummaryItem("Resize mode", conversionP.resizeMode));
+                            sectionEl.appendChild(createSummaryItem("调整大小模式", conversionP.resizeMode));
                             switch (conversionP.resizeMode) {
                                 case "Fit":
                                 case "Fill":
-                                    sectionEl.appendChild(createSummaryItem("Dimensions", `${conversionP.desiredWidth}x${conversionP.desiredHeight}`));
+                                    sectionEl.appendChild(createSummaryItem("尺寸", `${conversionP.desiredWidth}x${conversionP.desiredHeight}`));
                                     break;
                                 case "Width":
-                                    sectionEl.appendChild(createSummaryItem("Width", conversionP.desiredWidth));
+                                    sectionEl.appendChild(createSummaryItem("宽度", conversionP.desiredWidth));
                                     break;
                                 case "Height":
-                                    sectionEl.appendChild(createSummaryItem("Height", conversionP.desiredHeight));
+                                    sectionEl.appendChild(createSummaryItem("高度", conversionP.desiredHeight));
                                     break;
                                 case "LongestEdge":
                                 case "ShortestEdge":
-                                    sectionEl.appendChild(createSummaryItem("Edge", conversionP.desiredLongestEdge));
+                                    sectionEl.appendChild(createSummaryItem("边长", conversionP.desiredLongestEdge));
                                     break;
                             }
                             if (conversionP.resizeMode !== "None") {
-                                sectionEl.appendChild(createSummaryItem("Scale", conversionP.enlargeOrReduce));
+                                sectionEl.appendChild(createSummaryItem("缩放", conversionP.enlargeOrReduce));
                             }
-                            sectionEl.appendChild(createSummaryItem("Allow larger files", conversionP.allowLargerFiles ? "Yes" : "No"));
+                            sectionEl.appendChild(createSummaryItem("允许更大的文件", conversionP.allowLargerFiles ? "是" : "否"));
                             if (conversionP.revertToOriginalIfLarger) {
-                                sectionEl.appendChild(createSummaryItem("Revert to original if larger", "Yes"));
-                                sectionEl.appendChild(createSummaryItem("Minimum compression savings (KB)", conversionP.minimumCompressionSavingsInKB));
+                                sectionEl.appendChild(createSummaryItem("如果更大则恢复原图", "是"));
+                                sectionEl.appendChild(createSummaryItem("最小压缩节省量 (KB)", conversionP.minimumCompressionSavingsInKB));
                             }
-                            sectionEl.appendChild(createSummaryItem("Skip patterns", conversionP.skipConversionPatterns));
+                            sectionEl.appendChild(createSummaryItem("跳过模式", conversionP.skipConversionPatterns));
                         }
                         break;
                     }
-                    case "Link format": {
+                    case "链接格式": {
                         const linkP = preset as LinkFormatPreset;
-                        sectionEl.appendChild(createSummaryItem("Link type", linkP.linkFormat));
-                        sectionEl.appendChild(createSummaryItem("Path format", linkP.pathFormat));
+                        sectionEl.appendChild(createSummaryItem("链接类型", linkP.linkFormat));
+                        sectionEl.appendChild(createSummaryItem("路径格式", linkP.pathFormat));
                         break;
                     }
-                    case "Resize":
+                    case "调整大小":
                         if (resizePreset) { // Add this check here
                             let resizeDimensionSummary = "";
                             switch (resizePreset.resizeDimension) {
                                 case "width":
-                                    resizeDimensionSummary = `Width: ${resizePreset.width}${resizePreset.resizeUnits === "percentage" ? "%" : "px"}`;
+                                    resizeDimensionSummary = `宽度: ${resizePreset.width}${resizePreset.resizeUnits === "percentage" ? "%" : "px"}`;
                                     break;
                                 case "height":
-                                    resizeDimensionSummary = `Height: ${resizePreset.height}${resizePreset.resizeUnits === "percentage" ? "%" : "px"}`;
+                                    resizeDimensionSummary = `高度: ${resizePreset.height}${resizePreset.resizeUnits === "percentage" ? "%" : "px"}`;
                                     break;
                                 case "both":
-                                    resizeDimensionSummary = `Custom: ${resizePreset.customValue}`;
+                                    resizeDimensionSummary = `自定义: ${resizePreset.customValue}`;
                                     break;
                                 case "longest-edge":
-                                    resizeDimensionSummary = `Longest edge: ${resizePreset.longestEdge}${resizePreset.resizeUnits === "percentage" ? "%" : "px"}`;
+                                    resizeDimensionSummary = `最长边: ${resizePreset.longestEdge}${resizePreset.resizeUnits === "percentage" ? "%" : "px"}`;
                                     break;
                                 case "shortest-edge":
-                                    resizeDimensionSummary = `Shortest edge: ${resizePreset.shortestEdge}${resizePreset.resizeUnits === "percentage" ? "%" : "px"}`;
+                                    resizeDimensionSummary = `最短边: ${resizePreset.shortestEdge}${resizePreset.resizeUnits === "percentage" ? "%" : "px"}`;
                                     break;
                                 case "original-width":
-                                    resizeDimensionSummary = "Original width";
+                                    resizeDimensionSummary = "原始宽度";
                                     break;
                                 case "original-height":
-                                    resizeDimensionSummary = "Original height";
+                                    resizeDimensionSummary = "原始高度";
                                     break;
                                 case "editor-max-width":
-                                    resizeDimensionSummary = `Editor max width: ${resizePreset.editorMaxWidthValue}${resizePreset.resizeUnits === "percentage" ? "%" : "px"}`;
+                                    resizeDimensionSummary = `编辑器最大宽度: ${resizePreset.editorMaxWidthValue}${resizePreset.resizeUnits === "percentage" ? "%" : "px"}`;
                                     break;
                                 case "none":
-                                    resizeDimensionSummary = "No resizing";
+                                    resizeDimensionSummary = "不调整大小";
                                     break;
                             }
-                            sectionEl.appendChild(createSummaryItem("Dimension", resizeDimensionSummary));
+                            sectionEl.appendChild(createSummaryItem("尺寸", resizeDimensionSummary));
 
                             // Add scale mode, respect editor max width, and maintain aspect ratio
                             if (resizePreset.resizeDimension !== "none") {
-                                sectionEl.appendChild(createSummaryItem("Scale mode", resizePreset.resizeScaleMode));
-                                sectionEl.appendChild(createSummaryItem("Respect editor max width", resizePreset.respectEditorMaxWidth ? "Yes" : "No"));
+                                sectionEl.appendChild(createSummaryItem("缩放模式", resizePreset.resizeScaleMode));
+                                sectionEl.appendChild(createSummaryItem("遵循编辑器最大宽度", resizePreset.respectEditorMaxWidth ? "是" : "否"));
                                 if (resizePreset.resizeDimension !== "original-width" && resizePreset.resizeDimension !== "original-height" && resizePreset.resizeDimension !== "editor-max-width") {
-                                    sectionEl.appendChild(createSummaryItem("Maintain aspect ratio", resizePreset.maintainAspectRatio ? "Yes" : "No"));
+                                    sectionEl.appendChild(createSummaryItem("保持宽高比", resizePreset.maintainAspectRatio ? "是" : "否"));
                                 }
                             }
                         } // end of if (resizePreset) check
@@ -4162,11 +4162,11 @@ export class SaveGlobalPresetModal extends Modal {
             }
         };
 
-        addPresetSummary("Folder", folderPreset);
-        addPresetSummary("Filename", filenamePreset);
-        addPresetSummary("Conversion", conversionPreset);
-        addPresetSummary("Link format", linkFormatPreset);
-        addPresetSummary("Resize", resizePreset);
+        addPresetSummary("文件夹", folderPreset);
+        addPresetSummary("文件名", filenamePreset);
+        addPresetSummary("转换", conversionPreset);
+        addPresetSummary("链接格式", linkFormatPreset);
+        addPresetSummary("调整大小", resizePreset);
 
         // Append the fragment to the summary container
         summaryEl.appendChild(fragment);
@@ -4302,7 +4302,7 @@ export class AvailableVariablesModal extends Modal {
                             }
                         })();
                     });
-                    nameCell.title = "Click to copy variable name";
+                    nameCell.title = "点击复制变量名";
                 }
             }
         }
@@ -4311,7 +4311,7 @@ export class AvailableVariablesModal extends Modal {
         if (searchTerm && this.contentContainer.children.length === 0) {
             this.contentContainer.createEl("div", { 
                 cls: "variable-no-results",
-                text: `No variables found matching "${searchTerm}"`
+                text: `未找到匹配「${searchTerm}」的变量`
             });
         }
     }

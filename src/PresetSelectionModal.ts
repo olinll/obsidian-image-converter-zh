@@ -189,7 +189,7 @@ export class PresetSelectionModal extends Modal {
         // Title on the left
         header.createEl("h2", { 
           // eslint-disable-next-line obsidianmd/ui/sentence-case -- Plugin name
-            text: "Image Converter",
+            text: "图片转换器",
             cls: "image-converter-compact-title"
         });
         
@@ -198,8 +198,8 @@ export class PresetSelectionModal extends Modal {
         new Setting(variablesButton)
             .addButton((button) => {
                 button
-                    .setButtonText("{Variables}")
-                    .setTooltip("Show available variables")
+                    .setButtonText("{变量}")
+                    .setTooltip("显示可用变量")
                     .onClick(() => this.showAvailableVariables());
                 button.buttonEl.addClass("image-converter-variables-header-btn");
             });
@@ -215,8 +215,8 @@ export class PresetSelectionModal extends Modal {
         // Folder input with inline preset
         this.createCompactInputWithPreset(
             inputSection,
-            "📂 Folder",
-            "Temporarily overwrite path defined in selected preset e.g.: assets/{YYYY}/{MM}",
+            "📂 文件夹",
+            "临时覆盖路径，例如：assets/{YYYY}/{MM}",
             this.selectedFolderPreset,
             this.settings.folderPresets,
             (text) => { this.customFolderText = text; },
@@ -236,8 +236,8 @@ export class PresetSelectionModal extends Modal {
         // Filename input with inline preset
         this.createCompactInputWithPreset(
             inputSection,
-            "📄 Filename", 
-            "e.g., {imagename}-{timestamp}",
+            "📄 文件名",
+            "例如 {imagename}-{timestamp}",
             this.selectedFilenamePreset,
             this.settings.filenamePresets,
             (text) => { this.customFilenameText = text; },
@@ -371,8 +371,8 @@ export class PresetSelectionModal extends Modal {
         
         // Column Header Row 1: Format and Link
         const headerRow1 = this.processingCardContent.createDiv("image-converter-grid-header-row");
-        headerRow1.createEl("div", { text: "Format", cls: "image-converter-grid-header" });
-        headerRow1.createEl("div", { text: "Link", cls: "image-converter-grid-header" });
+        headerRow1.createEl("div", { text: "格式", cls: "image-converter-grid-header" });
+        headerRow1.createEl("div", { text: "链接", cls: "image-converter-grid-header" });
         
         // Component Row 1: Format dropdown and Link dropdown
         const componentRow1 = this.processingCardContent.createDiv("image-converter-grid-component-row");
@@ -416,9 +416,9 @@ export class PresetSelectionModal extends Modal {
 
         // Column Header Row 2: Resize and Quality
         const headerRow2 = this.processingCardContent.createDiv("image-converter-grid-header-row");
-        headerRow2.createEl("div", { text: "Resize", cls: "image-converter-grid-header" });
-        const qualityHeader = headerRow2.createEl("div", { 
-            text: `Quality ${this.selectedConversionPreset.quality}%`, 
+        headerRow2.createEl("div", { text: "调整大小", cls: "image-converter-grid-header" });
+        const qualityHeader = headerRow2.createEl("div", {
+            text: `质量 ${this.selectedConversionPreset.quality}%`, 
             cls: "image-converter-grid-header image-converter-quality-header" 
         });
         
@@ -454,7 +454,7 @@ export class PresetSelectionModal extends Modal {
                     .onChange((value) => {
                         this.selectedConversionPreset.quality = value;
                         // Update the quality header text
-                        qualityHeader.textContent = `Quality ${value}%`;
+                        qualityHeader.textContent = `质量 ${value}%`;
                         this.updateProcessingPreview();
                     });
                 slider.sliderEl.addClass("image-converter-quality-slider");
@@ -472,7 +472,7 @@ export class PresetSelectionModal extends Modal {
         const previewSection = container.createDiv("image-converter-compact-preview");
         
         const previewHeader = previewSection.createDiv("image-converter-preview-header-compact");
-        previewHeader.createEl("span", { text: "Preview", cls: "image-converter-preview-title-compact" });
+        previewHeader.createEl("span", { text: "预览", cls: "image-converter-preview-title-compact" });
         
         this.previewContainer = previewSection.createDiv("image-converter-preview-content-compact");
     }
@@ -491,7 +491,7 @@ export class PresetSelectionModal extends Modal {
         new Setting(actionSection)
             .addButton((button: ButtonComponent) => {
                 button
-                    .setButtonText("Edit presets")
+                    .setButtonText("编辑预设")
                     .onClick(() => {
                         this.close();
                         const appWithSettings = this.app as { setting?: { open(): void; openTabById(id: string): void } };
@@ -499,13 +499,13 @@ export class PresetSelectionModal extends Modal {
                             appWithSettings.setting.open();
                             appWithSettings.setting.openTabById(this.plugin.manifest.id);
                         } else {
-                            new Notice("Unable to open settings.");
+                            new Notice("无法打开设置。");
                         }
                     });
             })
             .addButton((button) => {
                 button
-                    .setButtonText("Apply")
+                    .setButtonText("应用")
                     .setCta()
                     .onClick(() => {
                         // Save current session state to settings for persistence
@@ -541,7 +541,7 @@ export class PresetSelectionModal extends Modal {
         // Global preset dropdown only (Variables button is now in the header)
         const miniSetting = new Setting(contentEl)
             .addDropdown((dropdown: DropdownComponent) => {
-                dropdown.addOption("none", "None");
+                dropdown.addOption("none", "无");
                 this.settings.globalPresets.forEach((preset) => {
                     dropdown.addOption(preset.name, preset.name);
                 });
@@ -676,12 +676,12 @@ export class PresetSelectionModal extends Modal {
                     const fullPath = [folderPath, filename].filter(Boolean).join("/");
 
                     newContent.createEl("div", {
-                        text: fullPath || "No path specified",
+                        text: fullPath || "未指定路径",
                         cls: "image-converter-preview-path-compact"
                     });
                 } else {
                     newContent.createEl("div", {
-                        text: "Enter templates to see preview",
+                        text: "输入模板以查看预览",
                         cls: "image-converter-preview-empty-compact"
                     });
                 }
@@ -696,7 +696,7 @@ export class PresetSelectionModal extends Modal {
                 if (this.previewContainer) {
                     this.previewContainer.empty();
                     this.previewContainer.createEl("div", {
-                        text: "Error generating preview",
+                        text: "生成预览时出错",
                         cls: "image-converter-preview-error-compact"
                     });
                 }

@@ -1,6 +1,7 @@
 // VariableProcessor.ts
 import { App, FileSystemAdapter, TFile, moment as obsidianMomentModule } from "obsidian";
 import { ImageConverterSettings } from "./ImageConverterSettings";
+import { getPinyinInitials } from "./utils/pinyinInitials";
 
 type MomentModule = typeof import('moment');
 // Obsidian exports `moment`, but the upstream typings can treat it as non-callable in TS5.9.
@@ -486,6 +487,21 @@ export class VariableProcessor {
             description: "A universally unique identifier (UUID).",
             example: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
         },
+        {
+            name: "{pinyin}",
+            description: "笔记名称的拼音首字母（小写）。",
+            example: "我的笔记 -> wdbj",
+        },
+        {
+            name: "{property:key}",
+            description: "读取笔记 frontmatter 中指定属性的值。如果属性不存在则为空。",
+            example: "{property:alias} -> 属性值",
+        },
+        {
+            name: "{property:key:pinyin}",
+            description: "读取笔记 frontmatter 中指定属性的值。如果属性不存在，回退为笔记名称的拼音首字母。",
+            example: "{property:alias:pinyin} -> 属性值 或 wdbj",
+        },
     ];
 
     async processTemplate(
@@ -650,6 +666,7 @@ export class VariableProcessor {
 
         variables["{notename}"] = activeFile.basename;
         variables["{notename_nospaces}"] = activeFile.basename.replace(/\s+/g, "_");
+        variables["{pinyin}"] = getPinyinInitials(activeFile.basename);
         variables["{notepath}"] = activeFile.parent ? `${activeFile.parent.path}/${activeFile.basename}` : activeFile.basename;
         variables["{parentfolder}"] = activeFile.parent?.name || "";
         variables["{grandparentfolder}"] = (activeFile.parent?.parent?.path == "/" ? activeFile.parent?.name : activeFile.parent?.parent?.name) || "";
@@ -728,6 +745,25 @@ export class VariableProcessor {
         variables: Record<string, string>
     ): Promise<Record<string, string>> {
         const { file, activeFile } = context;
+
+        // Handle {property:key} and {property:key:pinyin}
+        // Reads a value from the note's frontmatter. Falls back to pinyin initials if ":pinyin" suffix is present.
+        const propertyPattern = /{property:([\w.-]+)(?::(pinyin))?}/g;
+        let propertyMatch;
+        while ((propertyMatch = propertyPattern.exec(template)) !== null) {
+            const [fullToken, key, fallbackMode] = propertyMatch;
+            const cache = this.app.metadataCache.getFileCache(activeFile);
+            const frontmatter = cache?.frontmatter;
+            const propValue = frontmatter?.[key];
+
+            if (propValue != null && String(propValue).trim() !== '') {
+                variables[fullToken] = String(propValue).trim();
+            } else if (fallbackMode === 'pinyin') {
+                variables[fullToken] = getPinyinInitials(activeFile.basename);
+            } else {
+                variables[fullToken] = '';
+            }
+        }
 
         // Handle {randomHex:X}
         const hexPattern = /{randomHex:(\d+)}/g;

@@ -27,6 +27,12 @@ This document provides a detailed explanation of all available variables for the
 - `{vaultname}` - Obsidian vault name e.g.: "My Knowledge Base"
 - `{vaultpath}` - Full vault filesystem path (desktop) when available; otherwise falls back to the vault root path. e.g.: "C:/Users/username/Documents/Obsidian/My Knowledge Base"
 
+### Pinyin and Frontmatter Variables
+
+- `{pinyin}` - Pinyin initials of the current note name (lowercase). Chinese characters are converted to their pinyin first letter. e.g.: "我的笔记" → "wdbj", "Hello世界" → "hellosj"
+- `{property:key}` - Read a value from the note's frontmatter (YAML metadata) by key. Returns empty string if the property does not exist. e.g.: `{property:alias}` → "my-note" (if frontmatter contains `alias: my-note`)
+- `{property:key:pinyin}` - Read a frontmatter property value by key, with pinyin fallback. If the property does not exist or is empty, falls back to the pinyin initials of the note name. e.g.: `{property:alias:pinyin}` → "my-note" if alias exists, or "wdbj" if it doesn't (for a note named "我的笔记")
+
 ## Date and Time Variables
 
 ### Basic Date Formats

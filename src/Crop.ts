@@ -138,7 +138,7 @@ export class Crop extends Modal {
 	
 		// Create modal structure
 		const modalHeader = modalWrapper.createDiv('crop-modal-header');
-		modalHeader.createEl('h2', { text: 'Crop image' });
+		modalHeader.createEl('h2', { text: '裁剪图片' });
 	
 		// Create main container
 		const modalContent = modalWrapper.createDiv('crop-modal-content');
@@ -153,9 +153,9 @@ export class Crop extends Modal {
 	
 		// Create buttons - Move this inside modalWrapper
 		const buttonContainer = modalWrapper.createDiv('crop-modal-buttons');
-		const saveButton = buttonContainer.createEl('button', { text: 'Save' });
-		const cancelButton = buttonContainer.createEl('button', { text: 'Cancel' });
-		const resetButton = buttonContainer.createEl('button', { text: 'Reset' });
+		const saveButton = buttonContainer.createEl('button', { text: '保存' });
+		const cancelButton = buttonContainer.createEl('button', { text: '取消' });
+		const resetButton = buttonContainer.createEl('button', { text: '重置' });
 		
 		// Add aspect ratio controls
 		const aspectRatioContainer = modalHeader.createDiv('aspect-ratio-controls');
@@ -169,7 +169,7 @@ export class Crop extends Modal {
 
 		// Add preset ratio buttons
 		[
-			{ name: 'free', ratio: null, label: 'Free' },
+			{ name: 'free', ratio: null, label: '自由' },
 			{ name: 'square', ratio: 1, label: '1:1' },
 			{ name: '16:9', ratio: 16/9, label: '16:9' },
 			{ name: '4:3', ratio: 4/3, label: '4:3' },
@@ -265,7 +265,7 @@ export class Crop extends Modal {
             this.componentContainer.registerDomEvent(cancelButton, 'click', () => this.close());
             this.componentContainer.registerDomEvent(resetButton, 'click', () => this.resetSelection());
         } catch (error) {
-            new Notice('Error loading image for cropping');
+            new Notice('加载裁剪图片时出错');
             console.error('Crop modal error:', error);
             this.close();
         }
@@ -367,13 +367,13 @@ export class Crop extends Modal {
     const rotateLeftBtn = rotateContainer.createEl('button', {
 			cls: 'transform-button',
 			text: '↺',
-			attr: { title: '90° counter clockwise' }
+			attr: { title: '逆时针旋转90°' }
 		});
 		
 		const rotateRightBtn = rotateContainer.createEl('button', {
 			cls: 'transform-button',
 			text: '↻',
-			attr: { title: '90° clockwise' }
+			attr: { title: '顺时针旋转90°' }
 		});
 		
 		// Flip controls
@@ -382,13 +382,13 @@ export class Crop extends Modal {
 		const flipHorizontalBtn = flipContainer.createEl('button', {
 			cls: 'transform-button',
 			text: '↔',
-			attr: { title: 'Flip horizontally' }
+			attr: { title: '水平翻转' }
 		});
 		
 		const flipVerticalBtn = flipContainer.createEl('button', {
 			cls: 'transform-button',
 			text: '↕',
-			attr: { title: 'Flip vertically' }
+			attr: { title: '垂直翻转' }
 		});
 		
 		// Add event listeners
@@ -421,7 +421,7 @@ export class Crop extends Modal {
 
 		// Rotation controls
 		const rotationContainer = controlsContainer.createDiv({ cls: 'control-group rotation-controls' });
-		rotationContainer.createEl('span', { text: 'Rotation: ', cls: 'control-label' });
+		rotationContainer.createEl('span', { text: '旋转: ', cls: 'control-label' });
 
 		const rotationValue = rotationContainer.createEl('span', {
 			text: '0°',
@@ -441,7 +441,7 @@ export class Crop extends Modal {
 
 		// Zoom controls
 		const zoomContainer = controlsContainer.createDiv({ cls: 'control-group zoom-controls' });
-		zoomContainer.createEl('span', { text: 'Zoom: ', cls: 'control-label' });
+		zoomContainer.createEl('span', { text: '缩放: ', cls: 'control-label' });
 
 		const zoomValue = zoomContainer.createEl('span', {
 			text: '100%',
@@ -802,7 +802,7 @@ export class Crop extends Modal {
 			const originalCanvas = document.createElement('canvas');
 			const originalCtx = originalCanvas.getContext('2d');
 			if (!originalCtx) {
-				throw new Error('Could not get canvas context');
+				throw new Error('无法获取画布上下文');
 			}
 			originalCanvas.width = this.originalImage.naturalWidth;
 			originalCanvas.height = this.originalImage.naturalHeight;
@@ -812,7 +812,7 @@ export class Crop extends Modal {
 			const rotatedCanvas = document.createElement('canvas');
 			const rotatedCtx = rotatedCanvas.getContext('2d');
 			if (!rotatedCtx) {
-				throw new Error('Could not get canvas context for rotation');
+				throw new Error('无法获取旋转画布上下文');
 			}
 	
 			// Calculate dimensions after rotation
@@ -832,7 +832,7 @@ export class Crop extends Modal {
 			const finalCanvas = document.createElement('canvas');
 			const finalCtx = finalCanvas.getContext('2d');
 			if (!finalCtx) {
-				throw new Error('Could not get canvas context for cropping');
+				throw new Error('无法获取裁剪画布上下文');
 			}
 	
 			if (this.selectionArea.style.display !== 'none' && this.selectionArea.offsetWidth) {
@@ -925,7 +925,7 @@ export class Crop extends Modal {
 						if (result) {
 							resolve(result);
 						} else {
-							reject(new Error('Failed to create blob from canvas'));
+							reject(new Error('从画布创建blob失败'));
 						}
 					},
 					`image/${outputFormat}`,
@@ -934,18 +934,18 @@ export class Crop extends Modal {
 			});
 	
 			if (!blob) {
-				throw new Error('Failed to create image blob');
+				throw new Error('创建图片blob失败');
 			}
 	
 			const arrayBuffer = await blob.arrayBuffer();
 	
 			if (!arrayBuffer) {
-				throw new Error('Failed to create array buffer from blob');
+				throw new Error('从blob创建数组缓冲区失败');
 			}
 	
 			await this.app.vault.modifyBinary(this.imageFile, arrayBuffer);
 	
-			new Notice('Image saved successfully');
+			new Notice('图片保存成功');
 	
 			const leaf = this.app.workspace.getMostRecentLeaf();
 			if (leaf) {
@@ -962,7 +962,7 @@ export class Crop extends Modal {
 	} catch (error) {
 			console.error('Save error:', error);
 			const message = error instanceof Error ? error.message : String(error);
-			new Notice(`Error saving image: ${message}`);
+			new Notice(`保存图片时出错: ${message}`);
 		}
 	}
 
